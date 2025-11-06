@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import { useAppStore } from "@/store/app-store"
-import BeneficiaryApplicationForm from "@/components/beneficiary/application-form"
+import BeneficiaryApplicationFormImproved from "@/components/beneficiary/application-form-improved"
 import BeneficiaryStatusTracking from "@/components/beneficiary/status-tracking"
 import BeneficiaryPrivacyControls from "@/components/beneficiary/privacy-controls"
 import BeneficiaryDashboard from "@/components/portals/beneficiary-dashboard"
