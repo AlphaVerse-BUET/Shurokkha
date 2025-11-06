@@ -2,17 +2,13 @@
 
 import { mockBeneficiaries } from "@/store/mock-data"
 import { CheckCircle, Clock, MapPin, User } from "lucide-react"
+import { useBeneficiaryStatus } from "@/hooks/use-beneficiary-status"
+import { Badge } from "@/components/ui/badge"
 
 export default function BeneficiaryStatusTracking() {
   const beneficiary = mockBeneficiaries[0]
-
-  const statusStages = [
-    { status: "submitted", label: "Submitted", completed: true, date: beneficiary.appliedDate },
-    { status: "verified", label: "Verified", completed: true, date: "2024-06-06" },
-    { status: "matched", label: "Provider Matched", completed: true, date: "2024-06-07" },
-    { status: "in-progress", label: "Distribution In Progress", completed: true, date: "2024-06-08" },
-    { status: "completed", label: "Completed", completed: true, date: beneficiary.completionDate },
-  ]
+  const status = useBeneficiaryStatus(beneficiary)
+  const { statusLabel, statusColor, progress, timelineStages, nextAction, verificationBadge } = status
 
   return (
     <div className="max-w-2xl mx-auto space-y-6">
