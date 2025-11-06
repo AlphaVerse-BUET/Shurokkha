@@ -41,30 +41,40 @@ export default function BeneficiaryStatusTracking() {
         <h3 className="text-lg font-bold text-foreground mb-6">Application Journey</h3>
 
         <div className="space-y-4">
-          {statusStages.map((stage, index) => (
-            <div key={stage.status} className="flex gap-4">
+          {timelineStages.map((stage, index) => (
+            <div key={stage.id} className="flex gap-4">
               {/* Timeline line and dot */}
               <div className="flex flex-col items-center">
                 <div
-                  className={`w-10 h-10 rounded-full flex items-center justify-center border-2 ${
+                  className={`w-10 h-10 rounded-full flex items-center justify-center border-2 transition-all ${
                     stage.completed
                       ? "bg-green-600/20 border-green-600 text-green-600"
                       : "bg-border/50 border-border text-foreground/60"
                   }`}
+                  data-testid={`timeline-stage-${stage.id}`}
                 >
                   {stage.completed ? <CheckCircle className="w-5 h-5" /> : <Clock className="w-5 h-5" />}
                 </div>
-                {index < statusStages.length - 1 && (
-                  <div className={`w-1 flex-1 my-2 ${stage.completed ? "bg-green-600/30" : "bg-border/50"}`} />
+                {index < timelineStages.length - 1 && (
+                  <div 
+                    className={`w-1 flex-1 my-2 transition-all min-h-[40px] ${
+                      stage.completed ? "bg-green-600/30" : "bg-border/50"
+                    }`} 
+                  />
                 )}
               </div>
 
               {/* Content */}
-              <div className="pb-4">
+              <div className="pb-4 flex-1">
                 <h4 className="font-semibold text-foreground">{stage.label}</h4>
-                {stage.completed && (
+                {stage.completed && stage.date && (
                   <p className="text-xs text-foreground/60 mt-1">
                     Completed on {new Date(stage.date).toLocaleDateString()}
+                  </p>
+                )}
+                {!stage.completed && (
+                  <p className="text-xs text-muted-foreground mt-1">
+                    Waiting...
                   </p>
                 )}
               </div>
