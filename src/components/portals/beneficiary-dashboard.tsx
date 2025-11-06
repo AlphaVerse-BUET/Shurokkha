@@ -54,7 +54,10 @@ export default function BeneficiaryDashboard() {
             <FileText className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold capitalize">{beneficiary.applicationStatus}</div>
+            <div className="flex items-center gap-2 mb-2">
+              <div className="text-2xl font-bold">{statusLabel}</div>
+              <Badge className={verificationBadge.color}>{verificationBadge.text}</Badge>
+            </div>
             <p className="text-xs text-muted-foreground mt-1">{applicationProgress}% complete</p>
             <div className="mt-2 h-2 bg-muted rounded-full overflow-hidden">
               <div className={`h-full ${statusColor} transition-all`} style={{ width: `${applicationProgress}%` }} />
