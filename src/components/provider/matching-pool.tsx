@@ -19,15 +19,22 @@ interface ProviderMatchingPoolProps {
 export default function ProviderMatchingPool({ provider, metrics }: ProviderMatchingPoolProps) {
   const availableBeneficiaries = useMemo(() => {
     return mockBeneficiaries
-      .filter((b) => b.applicationStatus === "pending" || b.applicationStatus === "verified")
-      .filter((b) => {
-        // Match by crisis type and location
+      .filter((b) => b.applicationStatus === "pending" || b.applicationStatus === "verified" || b.applicationStatus === "submitted")
+      .map((b) => {
+        // Calculate match score
         const matchesCrisisType = provider.specialization.some((spec) =>
           b.needCategory.toLowerCase().includes(spec.toLowerCase()),
         )
         const matchesLocation = provider.geographicFocus.divisions.includes(b.location.division)
-        return matchesCrisisType && matchesLocation
+        const matchScore = (matchesCrisisType ? 50 : 0) + (matchesLocation ? 50 : 0)
+        
+        return {
+          ...b,
+          matchScore,
+          isCompatible: matchesCrisisType && matchesLocation,
+        }
       })
+      .sort((a, b) => b.matchScore - a.matchScore)
   }, [provider])
 
   const availableDonations = useMemo(() => {
