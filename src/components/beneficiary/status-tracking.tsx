@@ -15,14 +15,25 @@ export default function BeneficiaryStatusTracking() {
       {/* Current Status */}
       <div className="bg-gradient-to-r from-accent/20 to-primary/10 border border-accent/30 rounded-lg p-6">
         <div className="flex items-center justify-between">
-          <div>
-            <p className="text-foreground/70 text-sm">Current Status</p>
-            <h2 className="text-3xl font-bold text-accent capitalize">
-              {beneficiary.applicationStatus.replace("-", " ")}
-            </h2>
+          <div className="flex-1">
+            <div className="flex items-center gap-2 mb-1">
+              <p className="text-foreground/70 text-sm">Current Status</p>
+              <Badge className={verificationBadge.color}>{verificationBadge.text}</Badge>
+            </div>
+            <h2 className="text-3xl font-bold text-accent">{statusLabel}</h2>
+            <p className="text-sm text-foreground/60 mt-2">{progress}% complete</p>
+            <div className="mt-2 h-2 bg-muted rounded-full overflow-hidden max-w-md">
+              <div className={`h-full ${statusColor} transition-all`} style={{ width: `${progress}%` }} />
+            </div>
           </div>
-          <CheckCircle className="w-16 h-16 text-green-600" />
+          <CheckCircle className="w-16 h-16 text-green-600 flex-shrink-0" />
         </div>
+      </div>
+
+      {/* Next Action */}
+      <div className="bg-blue-500/10 border border-blue-500/30 rounded-lg p-4">
+        <p className="text-sm font-semibold text-blue-700 mb-1">Next Step:</p>
+        <p className="text-sm text-blue-600">{nextAction}</p>
       </div>
 
       {/* Journey timeline */}
