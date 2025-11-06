@@ -58,7 +58,7 @@ export default function BeneficiaryPortal() {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {activeTab === "dashboard" && <BeneficiaryDashboard />}
-        {activeTab === "apply" && <BeneficiaryApplicationForm />}
+        {activeTab === "apply" && <BeneficiaryApplicationFormImproved />}
         {activeTab === "status" && <BeneficiaryStatusTracking />}
         {activeTab === "privacy" && <BeneficiaryPrivacyControls />}
       </div>
