@@ -2,6 +2,7 @@
 
 import { Star, TrendingUp, Clock, Users, Award, AlertCircle } from "lucide-react"
 import type { Provider } from "@/types"
+import Link from "next/link"
 
 interface ProviderOverviewProps {
   provider: Provider
@@ -115,15 +116,21 @@ export default function ProviderOverview({ provider, metrics }: ProviderOverview
       <div className="bg-card border border-border/50 rounded-lg p-4">
         <h3 className="font-semibold text-foreground mb-3">Quick Actions</h3>
         <div className="flex flex-col sm:flex-row gap-3">
-          <button className="flex-1 px-4 py-2 bg-secondary hover:bg-secondary/90 text-secondary-foreground rounded-lg font-medium transition-colors">
-            View Donor Preferences
-          </button>
-          <button className="flex-1 px-4 py-2 bg-primary hover:bg-primary/90 text-primary-foreground rounded-lg font-medium transition-colors">
-            Browse Matching Opportunities
-          </button>
-          <button className="flex-1 px-4 py-2 bg-accent hover:bg-accent/90 text-accent-foreground rounded-lg font-medium transition-colors">
-            View Performance Report
-          </button>
+          <Link href="/provider/preferences" className="flex-1">
+            <button className="w-full px-4 py-2 bg-secondary hover:bg-secondary/90 text-secondary-foreground rounded-lg font-medium transition-colors">
+              View Donor Preferences
+            </button>
+          </Link>
+          <Link href="/provider/matching" className="flex-1">
+            <button className="w-full px-4 py-2 bg-primary hover:bg-primary/90 text-primary-foreground rounded-lg font-medium transition-colors">
+              Browse Matching Opportunities
+            </button>
+          </Link>
+          <Link href="/provider/performance" className="flex-1">
+            <button className="w-full px-4 py-2 bg-accent hover:bg-accent/90 text-accent-foreground rounded-lg font-medium transition-colors">
+              View Performance Report
+            </button>
+          </Link>
         </div>
       </div>
     </div>

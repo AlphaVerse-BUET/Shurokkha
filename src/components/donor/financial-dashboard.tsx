@@ -1,6 +1,7 @@
 "use client"
 
 import { Wallet, TrendingUp, ArrowUpRight, ArrowDownLeft } from "lucide-react"
+import Link from "next/link"
 
 interface FinancialMetrics {
   totalDonated: number
@@ -94,15 +95,21 @@ export default function DonorFinancialDashboard({ metrics, impactSummary }: Dono
       <div className="bg-card border border-border/50 rounded-lg p-4">
         <h3 className="font-semibold text-foreground mb-3">Quick Actions</h3>
         <div className="flex flex-col sm:flex-row gap-3">
-          <button className="flex-1 px-4 py-2 bg-primary hover:bg-primary/90 text-primary-foreground rounded-lg font-medium transition-colors">
-            Make New Donation
-          </button>
-          <button className="flex-1 px-4 py-2 bg-secondary hover:bg-secondary/90 text-secondary-foreground rounded-lg font-medium transition-colors">
-            View Impact Map
-          </button>
-          <button className="flex-1 px-4 py-2 bg-accent hover:bg-accent/90 text-accent-foreground rounded-lg font-medium transition-colors">
-            Download Receipts
-          </button>
+          <Link href="/donate/new" className="flex-1">
+            <button className="w-full px-4 py-2 bg-primary hover:bg-primary/90 text-primary-foreground rounded-lg font-medium transition-colors">
+              Make New Donation
+            </button>
+          </Link>
+          <Link href="/donor/impact-map" className="flex-1">
+            <button className="w-full px-4 py-2 bg-secondary hover:bg-secondary/90 text-secondary-foreground rounded-lg font-medium transition-colors">
+              View Impact Map
+            </button>
+          </Link>
+          <Link href="/donor/receipt" className="flex-1">
+            <button className="w-full px-4 py-2 bg-accent hover:bg-accent/90 text-accent-foreground rounded-lg font-medium transition-colors">
+              Download Receipts
+            </button>
+          </Link>
         </div>
       </div>
     </div>

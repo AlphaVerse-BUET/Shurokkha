@@ -6,12 +6,17 @@ import AdminFinancialCenter from "@/components/admin/financial-center"
 import AdminFraudDetection from "@/components/admin/fraud-detection"
 import AdminCrisisManagement from "@/components/admin/crisis-management"
 import AdminProviderManagement from "@/components/admin/provider-management"
-import { BarChart3, AlertTriangle, Globe, Users, LogOut } from "lucide-react"
+import { BarChart3, AlertTriangle, Globe, Users, Shield, Plus, User } from "lucide-react"
+import { Badge } from "@/components/ui/badge"
 import { mockDonations, mockProviders } from "@/store/mock-data"
+import { Button } from "@/components/ui/button"
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
+import { useRouter } from "next/navigation"
 
 export default function AdminDashboard() {
-  const { currentUser, logout } = useAppStore()
+  const { currentUser } = useAppStore()
   const [activeTab, setActiveTab] = useState<"financial" | "fraud" | "crises" | "providers">("financial")
+  const router = useRouter()
 
   // Calculate key metrics
   const metrics = useMemo(() => {
@@ -36,16 +41,36 @@ export default function AdminDashboard() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex items-center justify-between mb-4">
             <div>
-              <h1 className="text-3xl font-bold text-foreground">Admin Dashboard</h1>
+              <h1 className="text-3xl font-bold text-foreground flex items-center gap-2">
+                Admin Dashboard
+                <Badge variant="destructive" className="text-xs">
+                  <Shield className="w-3 h-3 mr-1" />
+                  AI Fraud Detection
+                </Badge>
+              </h1>
               <p className="text-sm text-foreground/60 mt-1">Platform Oversight & Fraud Prevention</p>
             </div>
-            <button
-              onClick={() => logout()}
-              className="flex items-center gap-2 px-4 py-2 hover:bg-card border border-border/50 rounded-lg text-foreground/70 hover:text-foreground transition-colors"
-            >
-              <LogOut className="w-4 h-4" />
-              <span className="text-sm font-medium">Logout</span>
-            </button>
+            <div className="flex gap-2">
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="default" className="gap-2">
+                    <Plus className="w-4 h-4" />
+                    Manual Add
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuItem onClick={() => router.push("/admin/create-crisis")}>Add Crisis</DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => router.push("/admin/providers/add")}>Add Provider</DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => router.push("/admin/beneficiaries/add")}>
+                    Add Beneficiary
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+              <Button onClick={() => router.push("/admin/profile")} variant="outline" className="gap-2">
+                <User className="w-4 h-4" />
+                Profile
+              </Button>
+            </div>
           </div>
 
           {/* Quick metrics */}

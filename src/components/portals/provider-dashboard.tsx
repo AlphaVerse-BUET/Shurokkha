@@ -7,11 +7,15 @@ import ProviderOverview from "@/components/provider/overview"
 import ProviderMatchingPool from "@/components/provider/matching-pool"
 import ProviderApplicationSubmission from "@/components/provider/application-submission"
 import ProviderActiveDistributions from "@/components/provider/active-distributions"
-import { BarChart3, Users, FileText, Zap, LogOut } from "lucide-react"
+import { BarChart3, Users, FileText, Zap, Sparkles, User, Upload } from "lucide-react"
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
+import { useRouter } from "next/navigation"
 
 export default function ProviderDashboard() {
-  const { currentUser, logout } = useAppStore()
+  const { currentUser } = useAppStore()
   const [activeTab, setActiveTab] = useState<"overview" | "matching" | "applications" | "distributions">("overview")
+  const router = useRouter()
 
   // Get provider data
   const provider = useMemo(() => {
@@ -40,16 +44,25 @@ export default function ProviderDashboard() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex items-center justify-between mb-4">
             <div>
-              <h1 className="text-3xl font-bold text-foreground">Provider Dashboard</h1>
+              <h1 className="text-3xl font-bold text-foreground flex items-center gap-2">
+                Provider Dashboard
+                <Badge variant="secondary" className="text-xs">
+                  <Sparkles className="w-3 h-3 mr-1" />
+                  AI-Verified
+                </Badge>
+              </h1>
               <p className="text-sm text-foreground/60 mt-1">{provider.organizationName}</p>
             </div>
-            <button
-              onClick={() => logout()}
-              className="flex items-center gap-2 px-4 py-2 hover:bg-card border border-border/50 rounded-lg text-foreground/70 hover:text-foreground transition-colors"
-            >
-              <LogOut className="w-4 h-4" />
-              <span className="text-sm font-medium">Logout</span>
-            </button>
+            <div className="flex gap-2">
+              <Button onClick={() => router.push("/provider/bulk-upload")} variant="default" className="gap-2">
+                <Upload className="w-4 h-4" />
+                Bulk Upload
+              </Button>
+              <Button onClick={() => router.push("/provider/profile")} variant="outline" className="gap-2">
+                <User className="w-4 h-4" />
+                Profile
+              </Button>
+            </div>
           </div>
 
           {/* Tab navigation */}

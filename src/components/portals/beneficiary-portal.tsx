@@ -5,34 +5,36 @@ import { useAppStore } from "@/store/app-store"
 import BeneficiaryApplicationForm from "@/components/beneficiary/application-form"
 import BeneficiaryStatusTracking from "@/components/beneficiary/status-tracking"
 import BeneficiaryPrivacyControls from "@/components/beneficiary/privacy-controls"
-import { FileText, Clock, Shield, LogOut } from "lucide-react"
+import BeneficiaryDashboard from "@/components/portals/beneficiary-dashboard"
+import { FileText, Clock, Shield, Home, Sparkles } from "lucide-react"
+import { Badge } from "@/components/ui/badge"
 
 export default function BeneficiaryPortal() {
-  const { currentUser, logout } = useAppStore()
-  const [activeTab, setActiveTab] = useState<"apply" | "status" | "privacy">("apply")
+  const { currentUser } = useAppStore()
+  const [activeTab, setActiveTab] = useState<"dashboard" | "apply" | "status" | "privacy">("dashboard")
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-background via-background to-accent/5">
       {/* Header */}
       <header className="border-b border-border/40 bg-background/80 backdrop-blur sticky top-0 z-40">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex items-center justify-between mb-4">
             <div>
-              <h1 className="text-3xl font-bold text-foreground">Beneficiary Portal</h1>
-              <p className="text-sm text-foreground/60 mt-1">Hello, {currentUser?.name}</p>
+              <h1 className="text-3xl font-bold text-foreground flex items-center gap-2">
+                Beneficiary Portal
+                <Badge variant="secondary" className="text-xs">
+                  <Sparkles className="w-3 h-3 mr-1" />
+                  AI-Protected
+                </Badge>
+              </h1>
+              <p className="text-sm text-foreground/60 mt-1">Hello, {currentUser?.name || "Guest"}</p>
             </div>
-            <button
-              onClick={() => logout()}
-              className="flex items-center gap-2 px-4 py-2 hover:bg-card border border-border/50 rounded-lg text-foreground/70 hover:text-foreground transition-colors"
-            >
-              <LogOut className="w-4 h-4" />
-              <span className="text-sm font-medium">Logout</span>
-            </button>
           </div>
 
           {/* Tab navigation */}
           <div className="flex gap-2 overflow-x-auto pb-4">
             {[
+              { id: "dashboard", label: "Dashboard", icon: Home },
               { id: "apply", label: "New Application", icon: FileText },
               { id: "status", label: "Track Application", icon: Clock },
               { id: "privacy", label: "Privacy Controls", icon: Shield },
@@ -54,7 +56,8 @@ export default function BeneficiaryPortal() {
         </div>
       </header>
 
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {activeTab === "dashboard" && <BeneficiaryDashboard />}
         {activeTab === "apply" && <BeneficiaryApplicationForm />}
         {activeTab === "status" && <BeneficiaryStatusTracking />}
         {activeTab === "privacy" && <BeneficiaryPrivacyControls />}

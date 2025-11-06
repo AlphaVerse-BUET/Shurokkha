@@ -1,6 +1,8 @@
 "use client"
 
 import { useState } from "react"
+import { useRouter } from "next/navigation"
+import { useToast } from "@/hooks/use-toast"
 import { AlertCircle, CheckCircle, Clock, TrendingDown } from "lucide-react"
 
 interface FundRecoveryMetrics {
@@ -15,9 +17,44 @@ interface DonorFundRecoveryProps {
 }
 
 export default function DonorFundRecovery({ metrics }: DonorFundRecoveryProps) {
+  const router = useRouter()
+  const { toast } = useToast()
   const [autoRefund, setAutoRefund] = useState(true)
   const [refundDays, setRefundDays] = useState(60)
   const [withdrawalAmount, setWithdrawalAmount] = useState(metrics.available.toString())
+  const [isProcessing, setIsProcessing] = useState(false)
+
+  const handleWithdrawal = async () => {
+    const amount = Number(withdrawalAmount)
+    if (!amount || amount <= 0 || amount > metrics.available) {
+      toast({
+        title: "Invalid Amount",
+        description: "Please enter a valid withdrawal amount within available funds",
+        variant: "destructive",
+      })
+      return
+    }
+
+    setIsProcessing(true)
+    await new Promise((resolve) => setTimeout(resolve, 1500))
+    setIsProcessing(false)
+
+    toast({
+      title: "Withdrawal Initiated",
+      description: `৳${amount.toLocaleString()} withdrawal request submitted. Processing takes 2-5 business days.`,
+    })
+  }
+
+  const handleSaveAutoRefund = () => {
+    toast({
+      title: "Settings Saved",
+      description: `Auto-refund enabled for ${refundDays} days of inactivity`,
+    })
+  }
+
+  const handleReallocate = () => {
+    router.push("/donate/new")
+  }
 
   return (
     <div className="space-y-6">
@@ -74,12 +111,16 @@ export default function DonorFundRecovery({ metrics }: DonorFundRecoveryProps) {
           </div>
 
           <button
+            onClick={handleWithdrawal}
             disabled={
-              !withdrawalAmount || Number(withdrawalAmount) <= 0 || Number(withdrawalAmount) > metrics.available
+              !withdrawalAmount ||
+              Number(withdrawalAmount) <= 0 ||
+              Number(withdrawalAmount) > metrics.available ||
+              isProcessing
             }
             className="w-full px-4 py-3 bg-primary hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed text-primary-foreground rounded-lg font-semibold transition-colors"
           >
-            Withdraw ৳{Number(withdrawalAmount || 0).toLocaleString()}
+            {isProcessing ? "Processing..." : `Withdraw ৳${Number(withdrawalAmount || 0).toLocaleString()}`}
           </button>
         </div>
       </div>
@@ -136,7 +177,10 @@ export default function DonorFundRecovery({ metrics }: DonorFundRecoveryProps) {
               </p>
             </div>
 
-            <button className="w-full px-4 py-2 bg-secondary hover:bg-secondary/90 text-secondary-foreground rounded-lg font-semibold transition-colors">
+            <button
+              onClick={handleSaveAutoRefund}
+              className="w-full px-4 py-2 bg-secondary hover:bg-secondary/90 text-secondary-foreground rounded-lg font-semibold transition-colors"
+            >
               Save Auto-Refund Settings
             </button>
           </div>
@@ -149,7 +193,10 @@ export default function DonorFundRecovery({ metrics }: DonorFundRecoveryProps) {
         <p className="text-sm text-foreground/70 mb-4">
           Transfer your unallocated funds to different crises or providers.
         </p>
-        <button className="w-full px-4 py-2 bg-accent hover:bg-accent/90 text-accent-foreground rounded-lg font-semibold transition-colors">
+        <button
+          onClick={handleReallocate}
+          className="w-full px-4 py-2 bg-accent hover:bg-accent/90 text-accent-foreground rounded-lg font-semibold transition-colors"
+        >
           Find New Crises
         </button>
       </div>

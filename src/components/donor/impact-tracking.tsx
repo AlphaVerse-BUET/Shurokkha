@@ -4,6 +4,7 @@ import { useMemo } from "react"
 import { mockBeneficiaries } from "@/store/mock-data"
 import type { BeneficiaryAllocation } from "@/types"
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from "recharts"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 
 interface DonorImpactTrackingProps {
   allocations: BeneficiaryAllocation[]
@@ -123,7 +124,12 @@ export default function DonorImpactTracking({ allocations }: DonorImpactTracking
               const beneficiary = mockBeneficiaries.find((b) => b.id === alloc.beneficiaryId)
               return (
                 <div key={alloc.id} className="flex items-start gap-3 pb-3 border-b border-border/30 last:border-0">
-                  <div className="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0" />
+                  <Avatar className="h-8 w-8 border-2 border-primary/20 flex-shrink-0">
+                    <AvatarImage src={beneficiary?.profileImage || "/placeholder.svg"} alt={beneficiary?.fullName} />
+                    <AvatarFallback className="bg-primary/10 text-primary text-xs font-semibold">
+                      {beneficiary?.fullName?.charAt(0) || "B"}
+                    </AvatarFallback>
+                  </Avatar>
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-medium text-foreground">
                       ৳{alloc.allocatedAmount.toLocaleString()} allocated to {beneficiary?.fullName || "Beneficiary"}

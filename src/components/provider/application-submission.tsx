@@ -1,6 +1,8 @@
 "use client"
 
 import { useState } from "react"
+import { useRouter } from "next/navigation"
+import { useToast } from "@/hooks/use-toast"
 import type { Provider } from "@/types"
 import { AlertCircle, CheckCircle, Plus, Upload } from "lucide-react"
 
@@ -9,7 +11,10 @@ interface ProviderApplicationSubmissionProps {
 }
 
 export default function ProviderApplicationSubmission({ provider }: ProviderApplicationSubmissionProps) {
+  const router = useRouter()
+  const { toast } = useToast()
   const [step, setStep] = useState(1)
+  const [isSubmitting, setIsSubmitting] = useState(false)
   const [formData, setFormData] = useState({
     crisis: "",
     beneficiaries: [
@@ -44,6 +49,40 @@ export default function ProviderApplicationSubmission({ provider }: ProviderAppl
 
   const totalAmount = formData.beneficiaries.reduce((sum, b) => sum + (Number(b.amount) || 0), 0)
   const canSubmit = formData.beneficiaries.every((b) => b.name && b.nid && b.amount) && totalAmount > 0
+
+  const handleSubmit = async () => {
+    setIsSubmitting(true)
+    // Simulate API call
+    await new Promise((resolve) => setTimeout(resolve, 2000))
+    setIsSubmitting(false)
+
+    toast({
+      title: "Application Submitted!",
+      description: "Your application will be AI-verified within 24 hours",
+    })
+
+    setTimeout(() => {
+      router.push("/dashboard")
+    }, 1500)
+  }
+
+  const handleContinue = () => {
+    if (step === 1 && canSubmit) {
+      setStep(2)
+      toast({
+        title: "Step 1 Complete",
+        description: `${formData.beneficiaries.length} beneficiaries added`,
+      })
+    } else if (step === 2) {
+      setStep(3)
+      toast({
+        title: "Documents Ready",
+        description: "Review your application before submitting",
+      })
+    } else if (step === 3) {
+      handleSubmit()
+    }
+  }
 
   return (
     <div className="max-w-4xl mx-auto space-y-6">
@@ -202,8 +241,12 @@ export default function ProviderApplicationSubmission({ provider }: ProviderAppl
             </div>
           </div>
 
-          <button className="w-full px-4 py-3 bg-secondary hover:bg-secondary/90 text-secondary-foreground rounded-lg font-semibold transition-colors">
-            Submit Application
+          <button
+            onClick={handleSubmit}
+            disabled={isSubmitting}
+            className="w-full px-4 py-3 bg-secondary hover:bg-secondary/90 disabled:opacity-50 text-secondary-foreground rounded-lg font-semibold transition-colors"
+          >
+            {isSubmitting ? "Submitting..." : "Submit Application"}
           </button>
         </div>
       )}
@@ -213,23 +256,18 @@ export default function ProviderApplicationSubmission({ provider }: ProviderAppl
         {step > 1 && (
           <button
             onClick={() => setStep(step - 1)}
+            disabled={isSubmitting}
             className="flex-1 px-4 py-2 bg-background border border-border/50 hover:bg-card rounded-lg text-foreground font-medium transition-colors"
           >
             Back
           </button>
         )}
         <button
-          onClick={() => {
-            if (step === 1 && canSubmit) setStep(2)
-            else if (step === 2) setStep(3)
-            else if (step === 3) {
-              /* Submit */
-            }
-          }}
-          disabled={step === 1 && !canSubmit}
+          onClick={handleContinue}
+          disabled={(step === 1 && !canSubmit) || isSubmitting}
           className="flex-1 px-4 py-2 bg-secondary hover:bg-secondary/90 disabled:opacity-50 text-secondary-foreground rounded-lg font-medium transition-colors"
         >
-          {step === 3 ? "Submit Application" : "Continue"}
+          {isSubmitting ? "Submitting..." : step === 3 ? "Submit Application" : "Continue"}
         </button>
       </div>
     </div>

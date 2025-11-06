@@ -1,14 +1,20 @@
 "use client"
 
 import { useState } from "react"
-import { CheckCircle, Upload, Plus, Trash2 } from "lucide-react"
+import { CheckCircle, Upload, Plus, Trash2, Loader2, AlertCircle } from "lucide-react"
+import { verifyNID } from "@/lib/ai-engines"
+import { useToast } from "@/hooks/use-toast"
 
 type NeedCategory = "shelter" | "food" | "medical" | "education" | "livelihood"
 type UrgencyLevel = "critical" | "emergency" | "high" | "medium"
 type PaymentMethod = "bank" | "bkash" | "nagad" | "rocket"
 
 export default function BeneficiaryApplicationForm() {
+  const { toast } = useToast()
   const [step, setStep] = useState(1)
+  const [isVerifying, setIsVerifying] = useState(false)
+  const [verificationResults, setVerificationResults] = useState<any>(null)
+
   const [formData, setFormData] = useState({
     fullName: "",
     nidNumber: "",
@@ -85,10 +91,63 @@ export default function BeneficiaryApplicationForm() {
 
   const totalAmount = formData.itemizedBreakdown.reduce((sum, item) => sum + (Number(item.cost) || 0), 0)
 
+  const handleAIVerification = async () => {
+    if (!formData.nidNumber || !documents.nidFront) {
+      toast({
+        title: "Missing Information",
+        description: "Please provide NID number and upload NID photos",
+        variant: "destructive",
+      })
+      return
+    }
+
+    setIsVerifying(true)
+    try {
+      // Simulate AI verification
+      const result = await verifyNID(formData.nidNumber, "nid-image-data", "selfie-data")
+
+      setVerificationResults(result)
+
+      if (result.verified) {
+        toast({
+          title: "Verification Successful!",
+          description: `AI verified your documents with ${result.confidence}% confidence`,
+        })
+      } else {
+        toast({
+          title: "Verification Issues",
+          description: result.issues.join(", "),
+          variant: "destructive",
+        })
+      }
+    } catch (error) {
+      toast({
+        title: "Verification Error",
+        description: "Failed to verify documents. Please try again.",
+        variant: "destructive",
+      })
+    } finally {
+      setIsVerifying(false)
+    }
+  }
+
   const handleContinue = () => {
     if (validateStep(step)) {
-      if (step < 4) setStep(step + 1)
+      if (step < 4) {
+        setStep(step + 1)
+        if (step === 3) {
+          handleAIVerification()
+        }
+      }
     }
+  }
+
+  const handleSubmit = () => {
+    toast({
+      title: "Application Submitted!",
+      description: "Your application is being processed. You'll receive SMS updates.",
+    })
+    // In real app: submit to backend
   }
 
   return (
@@ -295,6 +354,28 @@ export default function BeneficiaryApplicationForm() {
         <div className="bg-card border border-border/50 rounded-lg p-6 space-y-4">
           <h3 className="text-lg font-bold text-foreground">Upload Required Documents</h3>
 
+          {verificationResults && (
+            <div
+              className={`p-4 rounded-lg border ${
+                verificationResults.verified ? "bg-green-500/10 border-green-500/30" : "bg-red-500/10 border-red-500/30"
+              }`}
+            >
+              <div className="flex items-center gap-2">
+                {verificationResults.verified ? (
+                  <CheckCircle className="w-5 h-5 text-green-600" />
+                ) : (
+                  <AlertCircle className="w-5 h-5 text-red-600" />
+                )}
+                <div>
+                  <p className="font-medium">
+                    {verificationResults.verified ? "AI Verification Passed" : "Verification Issues Found"}
+                  </p>
+                  <p className="text-sm text-muted-foreground">Confidence: {verificationResults.confidence}%</p>
+                </div>
+              </div>
+            </div>
+          )}
+
           {[
             { id: "nidFront", label: "NID Front Copy", desc: "Clear photo of NID front side" },
             { id: "nidBack", label: "NID Back Copy", desc: "Clear photo of NID back side" },
@@ -335,6 +416,24 @@ export default function BeneficiaryApplicationForm() {
               {errors[id] && <p className="text-xs text-red-600 mt-1">{errors[id]}</p>}
             </div>
           ))}
+
+          <button
+            onClick={handleAIVerification}
+            disabled={isVerifying || !documents.nidFront || !documents.nidBack}
+            className="w-full px-4 py-3 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white rounded-lg font-semibold transition-colors flex items-center justify-center gap-2"
+          >
+            {isVerifying ? (
+              <>
+                <Loader2 className="w-5 h-5 animate-spin" />
+                Verifying with AI...
+              </>
+            ) : (
+              <>
+                <CheckCircle className="w-5 h-5" />
+                Verify Documents with AI
+              </>
+            )}
+          </button>
         </div>
       )}
 
@@ -388,7 +487,10 @@ export default function BeneficiaryApplicationForm() {
             <p>All documents will be AI-verified within 24-48 hours. You will receive SMS updates at each stage.</p>
           </div>
 
-          <button className="w-full px-4 py-3 bg-accent hover:bg-accent/90 text-accent-foreground rounded-lg font-semibold transition-colors">
+          <button
+            onClick={handleSubmit}
+            className="w-full px-4 py-3 bg-accent hover:bg-accent/90 text-accent-foreground rounded-lg font-semibold transition-colors"
+          >
             Submit Application
           </button>
         </div>
@@ -404,12 +506,14 @@ export default function BeneficiaryApplicationForm() {
             Back
           </button>
         )}
-        <button
-          onClick={handleContinue}
-          className="flex-1 px-4 py-2 bg-accent hover:bg-accent/90 text-accent-foreground rounded-lg font-medium transition-colors"
-        >
-          {step === 4 ? "Submit Application" : "Continue"}
-        </button>
+        {step < 4 && (
+          <button
+            onClick={handleContinue}
+            className="flex-1 px-4 py-2 bg-accent hover:bg-accent/90 text-accent-foreground rounded-lg font-medium transition-colors"
+          >
+            Continue
+          </button>
+        )}
       </div>
     </div>
   )

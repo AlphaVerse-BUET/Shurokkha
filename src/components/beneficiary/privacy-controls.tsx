@@ -1,15 +1,18 @@
 "use client"
 
 import { useState } from "react"
-import { Shield, Eye, EyeOff } from "lucide-react"
+import { useToast } from "@/hooks/use-toast"
+import { Shield, Eye, EyeOff, Download, Trash2 } from "lucide-react"
 
 export default function BeneficiaryPrivacyControls() {
+  const { toast } = useToast()
   const [privacyMode, setPrivacyMode] = useState("limited")
   const [dataAccess, setDataAccess] = useState({
     medical: true,
     income: false,
     familyDetails: false,
   })
+  const [isSaving, setIsSaving] = useState(false)
 
   const privacyModes = [
     {
@@ -31,6 +34,38 @@ export default function BeneficiaryPrivacyControls() {
       icon: Shield,
     },
   ]
+
+  const handleSaveSettings = async () => {
+    setIsSaving(true)
+    await new Promise((resolve) => setTimeout(resolve, 1000))
+    setIsSaving(false)
+
+    toast({
+      title: "Settings Saved",
+      description: `Privacy mode set to ${privacyMode}`,
+    })
+  }
+
+  const handleExportData = () => {
+    toast({
+      title: "Export Started",
+      description: "Your data export will be ready in a few minutes. Check your email.",
+    })
+  }
+
+  const handleRequestDeletion = () => {
+    const confirmed = window.confirm(
+      "Are you sure you want to request data deletion? This action cannot be undone and will be processed within 30 days.",
+    )
+
+    if (confirmed) {
+      toast({
+        title: "Deletion Requested",
+        description: "Your data deletion request has been submitted. Processing within 30 days.",
+        variant: "destructive",
+      })
+    }
+  }
 
   return (
     <div className="max-w-2xl mx-auto space-y-6">
@@ -100,18 +135,30 @@ export default function BeneficiaryPrivacyControls() {
           Export your data or request deletion (processed within 30 days).
         </p>
         <div className="flex gap-3">
-          <button className="flex-1 px-4 py-2 bg-background border border-border/50 hover:bg-card rounded-lg text-foreground font-medium transition-colors">
+          <button
+            onClick={handleExportData}
+            className="flex-1 px-4 py-2 bg-background border border-border/50 hover:bg-card rounded-lg text-foreground font-medium transition-colors flex items-center justify-center gap-2"
+          >
+            <Download className="w-4 h-4" />
             Export My Data
           </button>
-          <button className="flex-1 px-4 py-2 bg-red-500/10 border border-red-500/30 hover:bg-red-500/20 text-red-700 rounded-lg font-medium transition-colors">
+          <button
+            onClick={handleRequestDeletion}
+            className="flex-1 px-4 py-2 bg-red-500/10 border border-red-500/30 hover:bg-red-500/20 text-red-700 rounded-lg font-medium transition-colors flex items-center justify-center gap-2"
+          >
+            <Trash2 className="w-4 h-4" />
             Request Deletion
           </button>
         </div>
       </div>
 
       {/* Save changes */}
-      <button className="w-full px-4 py-3 bg-primary hover:bg-primary/90 text-primary-foreground rounded-lg font-semibold transition-colors">
-        Save Privacy Settings
+      <button
+        onClick={handleSaveSettings}
+        disabled={isSaving}
+        className="w-full px-4 py-3 bg-primary hover:bg-primary/90 disabled:opacity-50 text-primary-foreground rounded-lg font-semibold transition-colors"
+      >
+        {isSaving ? "Saving..." : "Save Privacy Settings"}
       </button>
     </div>
   )

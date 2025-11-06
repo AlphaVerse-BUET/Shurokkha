@@ -142,7 +142,9 @@ export interface Beneficiary {
   nidNumber: string
   nidFrontImage: string
   nidBackImage: string
+  profileImage?: string
   fullName: string
+  age?: number
   phone: string
   address: string
   location: {
@@ -167,6 +169,7 @@ export interface Beneficiary {
   // Family info
   familySize: number
   dependents: number
+  dependentDetails?: { name: string; age?: number; education?: string }[]
   incomeSources: string[]
 
   // Preferences
@@ -182,13 +185,15 @@ export interface Beneficiary {
   accountNumber: string
 
   // Status
-  applicationStatus: "submitted" | "verified" | "matched" | "in-progress" | "completed"
-  verificationStatus: "pending" | "verified" | "rejected"
+  applicationStatus: "submitted" | "verified" | "matched" | "in-progress" | "completed" | "pending"
+  verificationStatus: "pending" | "verified" | "rejected" | "under-review"
   privacyMode: "anonymous" | "limited" | "full"
+  allocatedProviderId?: string
 
   // Ratings
   providerRating?: number
   providerFeedback?: string
+  impactStory?: string
 
   // Tracking
   appliedDate: string

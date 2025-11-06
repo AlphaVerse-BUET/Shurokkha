@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from "react"
+import { useToast } from "@/hooks/use-toast"
 import { AlertTriangle, CheckCircle, XCircle, TrendingUp } from "lucide-react"
 
 const mockFraudAlerts = [
@@ -74,6 +75,7 @@ const mockBlacklist = [
 ]
 
 export default function AdminFraudDetection() {
+  const { toast } = useToast()
   const [selectedAlert, setSelectedAlert] = useState<string | null>(null)
   const [filterBySeverity, setFilterBySeverity] = useState("all")
 
@@ -92,6 +94,33 @@ export default function AdminFraudDetection() {
     if (status === "investigating") return <TrendingUp className="w-4 h-4" />
     if (status === "resolved") return <CheckCircle className="w-4 h-4" />
     return <XCircle className="w-4 h-4" />
+  }
+
+  const handleInvestigate = (alertId: string) => {
+    toast({
+      title: "Investigation Started",
+      description: `Alert ${alertId} marked for investigation. Admin will review within 24 hours.`,
+    })
+  }
+
+  const handleDismiss = (alertId: string) => {
+    toast({
+      title: "Alert Dismissed",
+      description: `Alert ${alertId} has been dismissed`,
+    })
+  }
+
+  const handleRemoveFromBlacklist = (entryId: string) => {
+    const confirmed = window.confirm(
+      "Are you sure you want to remove this entry from the blacklist? They will be able to apply again.",
+    )
+
+    if (confirmed) {
+      toast({
+        title: "Removed from Blacklist",
+        description: "Entry has been removed from the blacklist",
+      })
+    }
   }
 
   return (
@@ -165,10 +194,22 @@ export default function AdminFraudDetection() {
                     </ul>
                   </div>
                   <div className="flex gap-2 pt-2">
-                    <button className="flex-1 px-2 py-1 bg-white/20 hover:bg-white/30 rounded transition-colors text-xs font-medium">
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        handleInvestigate(alert.id)
+                      }}
+                      className="flex-1 px-2 py-1 bg-white/20 hover:bg-white/30 rounded transition-colors text-xs font-medium"
+                    >
                       Investigate
                     </button>
-                    <button className="flex-1 px-2 py-1 bg-white/20 hover:bg-white/30 rounded transition-colors text-xs font-medium">
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        handleDismiss(alert.id)
+                      }}
+                      className="flex-1 px-2 py-1 bg-white/20 hover:bg-white/30 rounded transition-colors text-xs font-medium"
+                    >
                       Dismiss
                     </button>
                   </div>
@@ -197,7 +238,10 @@ export default function AdminFraudDetection() {
                   <p>Added: {entry.addedDate}</p>
                 </div>
               </div>
-              <button className="text-xs px-2 py-1 bg-red-500/20 hover:bg-red-500/30 text-red-700 rounded transition-colors">
+              <button
+                onClick={() => handleRemoveFromBlacklist(entry.id)}
+                className="text-xs px-2 py-1 bg-red-500/20 hover:bg-red-500/30 text-red-700 rounded transition-colors"
+              >
                 Remove from Blacklist
               </button>
             </div>

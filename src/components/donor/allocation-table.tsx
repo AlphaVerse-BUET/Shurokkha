@@ -3,6 +3,7 @@
 import { mockCrises, mockBeneficiaries, mockProviders } from "@/store/mock-data"
 import type { BeneficiaryAllocation } from "@/types"
 import { ChevronRight, CheckCircle, Clock, AlertCircle } from "lucide-react"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 
 interface DonorAllocationTableProps {
   allocations: BeneficiaryAllocation[]
@@ -48,11 +49,26 @@ export default function DonorAllocationTable({ allocations }: DonorAllocationTab
                   <div className="grid grid-cols-1 md:grid-cols-6 gap-4 items-center">
                     {/* Beneficiary info */}
                     <div className="md:col-span-2">
-                      <p className="text-xs text-foreground/60 mb-1">Beneficiary</p>
-                      <p className="font-medium text-foreground">{beneficiary?.fullName || "Beneficiary"}</p>
-                      <p className="text-xs text-foreground/60">
-                        {beneficiary?.location.district}, {beneficiary?.location.division}
-                      </p>
+                      <p className="text-xs text-foreground/60 mb-2">Beneficiary</p>
+                      <div className="flex items-center gap-3">
+                        <Avatar className="h-10 w-10 border-2 border-primary/20">
+                          <AvatarImage
+                            src={beneficiary?.profileImage || "/placeholder.svg"}
+                            alt={beneficiary?.fullName}
+                          />
+                          <AvatarFallback className="bg-primary/10 text-primary font-semibold">
+                            {beneficiary?.fullName?.charAt(0) || "B"}
+                          </AvatarFallback>
+                        </Avatar>
+                        <div className="flex-1 min-w-0">
+                          <p className="font-medium text-foreground truncate">
+                            {beneficiary?.fullName || "Beneficiary"}
+                          </p>
+                          <p className="text-xs text-foreground/60 truncate">
+                            {beneficiary?.location.district}, {beneficiary?.location.division}
+                          </p>
+                        </div>
+                      </div>
                     </div>
 
                     {/* Provider info */}

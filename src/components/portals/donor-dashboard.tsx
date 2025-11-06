@@ -8,11 +8,15 @@ import DonorAllocationTable from "@/components/donor/allocation-table"
 import DonorImpactTracking from "@/components/donor/impact-tracking"
 import DonorFundRecovery from "@/components/donor/fund-recovery"
 import DonorGamification from "@/components/donor/gamification"
-import { Wallet, TrendingUp, History, Settings, LogOut } from "lucide-react"
+import { Wallet, TrendingUp, History, Settings, Sparkles, User } from "lucide-react"
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
+import { useRouter } from "next/navigation"
 
 export default function DonorDashboard() {
-  const { currentUser, logout } = useAppStore()
+  const { currentUser } = useAppStore()
   const [activeTab, setActiveTab] = useState<"overview" | "allocations" | "impact" | "recovery" | "profile">("overview")
+  const router = useRouter()
 
   // Get donor-specific data
   const donorAllocations = useMemo(() => {
@@ -60,16 +64,20 @@ export default function DonorDashboard() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex items-center justify-between mb-4">
             <div>
-              <h1 className="text-3xl font-bold text-foreground">Donor Dashboard</h1>
+              <h1 className="text-3xl font-bold text-foreground flex items-center gap-2">
+                Donor Dashboard
+                <Badge variant="secondary" className="text-xs">
+                  <Sparkles className="w-3 h-3 mr-1" />
+                  AI-Powered
+                </Badge>
+              </h1>
               <p className="text-sm text-foreground/60 mt-1">Welcome back, {currentUser?.name}</p>
             </div>
-            <button
-              onClick={() => logout()}
-              className="flex items-center gap-2 px-4 py-2 hover:bg-card border border-border/50 rounded-lg text-foreground/70 hover:text-foreground transition-colors"
-            >
-              <LogOut className="w-4 h-4" />
-              <span className="text-sm font-medium">Logout</span>
-            </button>
+            {/* Profile button */}
+            <Button onClick={() => router.push("/donor/profile")} variant="outline" className="gap-2">
+              <User className="w-4 h-4" />
+              My Profile
+            </Button>
           </div>
 
           {/* Tab navigation */}
