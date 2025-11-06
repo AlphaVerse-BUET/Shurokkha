@@ -17,6 +17,8 @@ import {
 } from "lucide-react"
 import { mockBeneficiaries, mockProviders } from "@/store/mock-data"
 import { useRouter } from "next/navigation"
+import { useBeneficiaryStatus } from "@/hooks/use-beneficiary-status"
+import { Badge } from "@/components/ui/badge"
 
 export default function BeneficiaryDashboard() {
   const router = useRouter()
@@ -25,25 +27,8 @@ export default function BeneficiaryDashboard() {
     ? mockProviders.find((p) => p.id === beneficiary.allocatedProviderId)
     : null
 
-  const applicationProgress =
-    beneficiary.applicationStatus === "completed"
-      ? 100
-      : beneficiary.applicationStatus === "in-progress"
-        ? 60
-        : beneficiary.applicationStatus === "matched"
-          ? 40
-          : beneficiary.applicationStatus === "verified"
-            ? 20
-            : 10
-
-  const statusColor =
-    beneficiary.applicationStatus === "completed"
-      ? "bg-green-500"
-      : beneficiary.applicationStatus === "in-progress"
-        ? "bg-blue-500"
-        : beneficiary.applicationStatus === "matched"
-          ? "bg-purple-500"
-          : "bg-yellow-500"
+  const status = useBeneficiaryStatus(beneficiary)
+  const { progress: applicationProgress, statusColor, statusLabel, verificationBadge } = status
 
   return (
     <div className="space-y-6">
