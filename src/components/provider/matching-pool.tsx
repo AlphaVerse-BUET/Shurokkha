@@ -105,11 +105,22 @@ export default function ProviderMatchingPool({ provider, metrics }: ProviderMatc
           <div className="text-center py-8">
             <AlertCircle className="w-12 h-12 text-foreground/20 mx-auto mb-3" />
             <p className="text-foreground/60">No matching beneficiaries available right now</p>
+            <p className="text-xs text-muted-foreground mt-2">
+              Update your specialization or geographic focus to see more matches
+            </p>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {availableBeneficiaries.map((beneficiary) => (
-              <Card key={beneficiary.id} className="p-4 hover:shadow-lg transition-all border-2 hover:border-primary">
+              <Card 
+                key={beneficiary.id} 
+                className={`p-4 hover:shadow-lg transition-all border-2 ${
+                  beneficiary.isCompatible 
+                    ? "hover:border-primary border-green-500/30 bg-green-500/5" 
+                    : "hover:border-border border-orange-500/30 bg-orange-500/5 opacity-80"
+                }`}
+                data-testid={`beneficiary-card-${beneficiary.id}`}
+              >
                 <div className="flex gap-4">
                   <div className="relative w-16 h-16 flex-shrink-0">
                     <Image
@@ -119,13 +130,24 @@ export default function ProviderMatchingPool({ provider, metrics }: ProviderMatc
                       height={64}
                       className="rounded-full border-2 border-primary object-cover"
                     />
-                    <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-green-500 rounded-full border-2 border-white flex items-center justify-center">
-                      <CheckCircle className="w-3 h-3 text-white" />
+                    <div className={`absolute -bottom-1 -right-1 w-5 h-5 rounded-full border-2 border-white flex items-center justify-center ${
+                      beneficiary.isCompatible ? "bg-green-500" : "bg-orange-500"
+                    }`}>
+                      {beneficiary.isCompatible ? (
+                        <CheckCircle className="w-3 h-3 text-white" />
+                      ) : (
+                        <AlertCircle className="w-3 h-3 text-white" />
+                      )}
                     </div>
                   </div>
 
                   <div className="flex-1 min-w-0">
-                    <h4 className="font-bold text-foreground truncate">{beneficiary.fullName}</h4>
+                    <div className="flex items-center gap-2 mb-1">
+                      <h4 className="font-bold text-foreground truncate">{beneficiary.fullName}</h4>
+                      {beneficiary.isCompatible && (
+                        <Badge className="bg-green-600 text-xs">Match</Badge>
+                      )}
+                    </div>
                     <p className="text-xs text-muted-foreground">
                       Age {beneficiary.age} • Family of {beneficiary.familySize}
                     </p>
@@ -133,16 +155,21 @@ export default function ProviderMatchingPool({ provider, metrics }: ProviderMatc
                       📍 {beneficiary.location.district}, {beneficiary.location.division}
                     </p>
                     <div className="flex gap-1 mt-2">
-                      <Badge variant="outline" className="text-xs">
+                      <Badge variant="outline" className="text-xs capitalize">
                         {beneficiary.needCategory}
                       </Badge>
                       <Badge variant="secondary" className="text-xs">
-                        ৳{formatAmount(beneficiary.requestedAmount)}
+                        ৳{formatAmount(beneficiary.amountRequested)}
                       </Badge>
                     </div>
                   </div>
 
-                  <Button size="sm" variant="outline" className="self-start bg-transparent">
+                  <Button 
+                    size="sm" 
+                    variant={beneficiary.isCompatible ? "default" : "outline"}
+                    className="self-start"
+                    data-testid={`btn-view-beneficiary-${beneficiary.id}`}
+                  >
                     <ChevronRight className="w-4 h-4" />
                   </Button>
                 </div>
@@ -153,15 +180,31 @@ export default function ProviderMatchingPool({ provider, metrics }: ProviderMatc
                       className={`w-2 h-2 rounded-full ${
                         beneficiary.urgencyLevel === "critical"
                           ? "bg-red-500"
-                          : beneficiary.urgencyLevel === "high"
+                          : beneficiary.urgencyLevel === "emergency"
                             ? "bg-orange-500"
-                            : "bg-yellow-500"
+                            : beneficiary.urgencyLevel === "high"
+                              ? "bg-yellow-500"
+                              : "bg-blue-500"
                       }`}
                     />
                     {beneficiary.urgencyLevel} urgency
                   </span>
-                  <span className="text-green-600 font-medium">✓ {beneficiary.verificationStatus}</span>
+                  <div className="flex items-center gap-2">
+                    <span className="text-green-600 font-medium">✓ {beneficiary.verificationStatus}</span>
+                    {beneficiary.matchScore && (
+                      <Badge variant="outline" className="text-xs">
+                        {beneficiary.matchScore}% match
+                      </Badge>
+                    )}
+                  </div>
                 </div>
+
+                {!beneficiary.isCompatible && (
+                  <div className="mt-2 p-2 bg-orange-500/10 border border-orange-500/30 rounded text-xs text-orange-700">
+                    <AlertCircle className="w-3 h-3 inline mr-1" />
+                    Outside your focus area - Lower priority
+                  </div>
+                )}
               </Card>
             ))}
           </div>
