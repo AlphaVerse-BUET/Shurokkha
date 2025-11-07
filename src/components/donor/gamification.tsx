@@ -79,7 +79,7 @@ export default function DonorGamification({ donorId }: DonorGamificationProps) {
   return (
     <div className="space-y-6">
       {/* Donor Level */}
-      <div className={`bg-gradient-to-r ${donorData.levelColor} rounded-lg p-6 text-white shadow-lg`}>
+      <div className={`bg-linear-to-r ${donorData.levelColor} rounded-lg p-6 text-white shadow-lg`}>
         <div className="flex items-center justify-between mb-4">
           <div>
             <p className="text-sm font-semibold opacity-90">Current Level</p>

@@ -61,7 +61,7 @@ export default function DonorImpactTracking({ allocations }: DonorImpactTracking
   return (
     <div className="space-y-6">
       {/* Total impact card */}
-      <div className="bg-gradient-to-br from-primary/10 to-accent/5 border border-primary/30 rounded-lg p-6 text-center">
+      <div className="bg-linear-to-br from-primary/10 to-accent/5 border border-primary/30 rounded-lg p-6 text-center">
         <p className="text-foreground/70 text-sm mb-2">Total Impact Created</p>
         <h2 className="text-4xl font-bold text-primary">৳{(totalImpact / 1000000).toFixed(2)}M</h2>
         <p className="text-foreground/60 text-sm mt-2">Distributed across {allocations.length} allocations</p>
@@ -124,7 +124,7 @@ export default function DonorImpactTracking({ allocations }: DonorImpactTracking
               const beneficiary = mockBeneficiaries.find((b) => b.id === alloc.beneficiaryId)
               return (
                 <div key={alloc.id} className="flex items-start gap-3 pb-3 border-b border-border/30 last:border-0">
-                  <Avatar className="h-8 w-8 border-2 border-primary/20 flex-shrink-0">
+                  <Avatar className="h-8 w-8 border-2 border-primary/20 shrink-0">
                     <AvatarImage src={beneficiary?.profileImage || "/placeholder.svg"} alt={beneficiary?.fullName} />
                     <AvatarFallback className="bg-primary/10 text-primary text-xs font-semibold">
                       {beneficiary?.fullName?.charAt(0) || "B"}

@@ -3,6 +3,7 @@
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { useToast } from "@/hooks/use-toast"
+import { useCurrency } from "@/hooks/use-currency"
 import { AlertCircle, CheckCircle, Clock, TrendingDown } from "lucide-react"
 
 interface FundRecoveryMetrics {
@@ -19,6 +20,7 @@ interface DonorFundRecoveryProps {
 export default function DonorFundRecovery({ metrics }: DonorFundRecoveryProps) {
   const router = useRouter()
   const { toast } = useToast()
+  const currency = useCurrency()
   const [autoRefund, setAutoRefund] = useState(true)
   const [refundDays, setRefundDays] = useState(60)
   const [withdrawalAmount, setWithdrawalAmount] = useState(metrics.available.toString())
@@ -41,7 +43,7 @@ export default function DonorFundRecovery({ metrics }: DonorFundRecoveryProps) {
 
     toast({
       title: "Withdrawal Initiated",
-      description: `৳${amount.toLocaleString()} withdrawal request submitted. Processing takes 2-5 business days.`,
+      description: `${currency.format(amount)} withdrawal request submitted. Processing takes 2-5 business days.`,
     })
   }
 
@@ -65,7 +67,7 @@ export default function DonorFundRecovery({ metrics }: DonorFundRecoveryProps) {
             <TrendingDown className="w-5 h-5 text-red-600" />
             <span className="text-xs font-semibold text-foreground/60 uppercase">Unallocated</span>
           </div>
-          <p className="text-2xl font-bold text-foreground">৳{metrics.available.toLocaleString()}</p>
+          <p className="text-2xl font-bold text-foreground">{currency.format(metrics.available)}</p>
           <p className="text-xs text-foreground/60 mt-2">Ready to withdraw or reallocate</p>
         </div>
 
@@ -74,7 +76,7 @@ export default function DonorFundRecovery({ metrics }: DonorFundRecoveryProps) {
             <Clock className="w-5 h-5 text-yellow-600" />
             <span className="text-xs font-semibold text-foreground/60 uppercase">Locked in Escrow</span>
           </div>
-          <p className="text-2xl font-bold text-foreground">৳{metrics.allocated.toLocaleString()}</p>
+          <p className="text-2xl font-bold text-foreground">{currency.format(metrics.allocated)}</p>
           <p className="text-xs text-foreground/60 mt-2">Committed to active distributions</p>
         </div>
 
@@ -107,7 +109,7 @@ export default function DonorFundRecovery({ metrics }: DonorFundRecoveryProps) {
               max={metrics.available}
               className="w-full px-4 py-2 bg-background border border-border/50 rounded-lg text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
             />
-            <p className="text-xs text-foreground/60 mt-2">Maximum available: ৳{metrics.available.toLocaleString()}</p>
+            <p className="text-xs text-foreground/60 mt-2">Maximum available: {currency.format(metrics.available)}</p>
           </div>
 
           <button
@@ -118,9 +120,9 @@ export default function DonorFundRecovery({ metrics }: DonorFundRecoveryProps) {
               Number(withdrawalAmount) > metrics.available ||
               isProcessing
             }
-            className="w-full px-4 py-3 bg-primary hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed text-primary-foreground rounded-lg font-semibold transition-colors"
+            className="px-6 py-3 bg-primary hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed text-primary-foreground rounded-lg font-semibold transition-colors"
           >
-            {isProcessing ? "Processing..." : `Withdraw ৳${Number(withdrawalAmount || 0).toLocaleString()}`}
+            {isProcessing ? "Processing..." : `Withdraw ${currency.format(Number(withdrawalAmount || 0))}`}
           </button>
         </div>
       </div>
@@ -203,7 +205,7 @@ export default function DonorFundRecovery({ metrics }: DonorFundRecoveryProps) {
 
       {/* Info box */}
       <div className="bg-amber-500/10 border border-amber-500/30 rounded-lg p-4 flex gap-3">
-        <AlertCircle className="w-5 h-5 text-amber-700 flex-shrink-0 mt-0.5" />
+        <AlertCircle className="w-5 h-5 text-amber-700 shrink-0 mt-0.5" />
         <div className="text-sm text-amber-700">
           <p className="font-semibold mb-1">Fund Security</p>
           <p>

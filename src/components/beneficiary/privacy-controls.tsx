@@ -89,7 +89,7 @@ export default function BeneficiaryPrivacyControls() {
                 <p className="font-semibold text-foreground">{label}</p>
                 <p className="text-xs text-foreground/60 mt-1">{description}</p>
               </div>
-              <Icon className="w-5 h-5 text-primary flex-shrink-0 mt-1" />
+              <Icon className="w-5 h-5 text-primary shrink-0 mt-1" />
             </label>
           ))}
         </div>

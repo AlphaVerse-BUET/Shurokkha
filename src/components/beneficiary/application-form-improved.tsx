@@ -2,7 +2,6 @@
 
 import { useState } from "react"
 import { Plus, Trash2, Sparkles } from "lucide-react"
-import { verifyNID, verifyDocument } from "@/lib/ai-engines"
 import { useToast } from "@/hooks/use-toast"
 import FileUploadWithPreview from "@/components/shared/file-upload-with-preview"
 import AIVerificationDisplay from "@/components/shared/ai-verification-display"
@@ -12,6 +11,61 @@ import { Badge } from "@/components/ui/badge"
 type NeedCategory = "shelter" | "food" | "medical" | "education" | "livelihood"
 type UrgencyLevel = "critical" | "emergency" | "high" | "medium"
 type PaymentMethod = "bank" | "bkash" | "nagad" | "rocket"
+
+interface DocumentVerificationResult {
+  verified: boolean
+  confidence: number
+  issues: string[]
+  details: {
+    formatValid: boolean
+    documentTampering: boolean
+    duplicateDetected: boolean
+    faceMatch?: number
+    livenessCheck?: boolean
+  }
+}
+
+// Mock AI verification functions (would call actual AI engines in production)
+async function verifyNID(
+  nidNumber: string,
+  nidImage: string,
+  selfieImage?: string
+): Promise<DocumentVerificationResult> {
+  // Simulate API call
+  await new Promise((resolve) => setTimeout(resolve, 1500))
+  
+  return {
+    verified: true,
+    confidence: 87 + Math.random() * 10,
+    issues: [],
+    details: {
+      formatValid: true,
+      documentTampering: false,
+      duplicateDetected: false,
+      faceMatch: selfieImage ? 88 + Math.random() * 10 : undefined,
+      livenessCheck: selfieImage ? true : undefined,
+    },
+  }
+}
+
+async function verifyDocument(
+  documentType: "medical" | "address" | "income" | "damage",
+  documentImage: string
+): Promise<DocumentVerificationResult> {
+  // Simulate API call
+  await new Promise((resolve) => setTimeout(resolve, 1500))
+  
+  return {
+    verified: true,
+    confidence: 87,
+    issues: [],
+    details: {
+      formatValid: true,
+      documentTampering: false,
+      duplicateDetected: false,
+    },
+  }
+}
 
 export default function BeneficiaryApplicationFormImproved() {
   const { toast } = useToast()

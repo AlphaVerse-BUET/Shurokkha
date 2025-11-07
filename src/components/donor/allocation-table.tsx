@@ -8,12 +8,14 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { DistributionProofViewer } from "@/components/shared/distribution-proof-viewer"
+import { useCurrency } from "@/hooks/use-currency"
 
 interface DonorAllocationTableProps {
   allocations: BeneficiaryAllocation[]
 }
 
 export default function DonorAllocationTable({ allocations }: DonorAllocationTableProps) {
+  const currency = useCurrency()
   const [selectedAllocation, setSelectedAllocation] = useState<string | null>(null)
   const [showProof, setShowProof] = useState(false)
 
@@ -104,7 +106,7 @@ export default function DonorAllocationTable({ allocations }: DonorAllocationTab
                     {/* Amount */}
                     <div>
                       <p className="text-xs text-foreground/60 mb-1">Amount</p>
-                      <p className="font-bold text-primary">৳{allocation.allocatedAmount.toLocaleString()}</p>
+                      <p className="font-bold text-primary">{currency.format(allocation.allocatedAmount)}</p>
                     </div>
 
                     {/* Status */}

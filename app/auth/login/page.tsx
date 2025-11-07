@@ -95,7 +95,7 @@ export default function LoginPage() {
   const options = userOptions[selectedRole as keyof typeof userOptions] || []
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-background to-secondary/5 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-linear-to-br from-background via-background to-secondary/5 flex items-center justify-center p-4">
       <Card className="w-full max-w-md p-8 space-y-6">
         <div className="text-center space-y-2">
           <h1 className="text-3xl font-bold">Welcome to Shurokkha</h1>

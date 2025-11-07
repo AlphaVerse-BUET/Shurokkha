@@ -29,7 +29,7 @@ export default function CrisisCard({ crisis, onView, onDonate }: CrisisCardProps
   return (
     <div className="group bg-card border border-border/50 hover:border-primary/30 rounded-lg overflow-hidden transition-all hover:shadow-lg hover:shadow-primary/10">
       {/* Image container */}
-      <div className="relative h-40 bg-gradient-to-br from-background to-background/50 overflow-hidden flex items-center justify-center border-b border-border/50">
+      <div className="relative h-40 bg-linear-to-br from-background to-background/50 overflow-hidden flex items-center justify-center border-b border-border/50">
         <img
           src={crisis.evidenceImages[0] || "/placeholder.svg?height=160&width=280&query=crisis"}
           alt={crisis.title}
@@ -79,7 +79,7 @@ export default function CrisisCard({ crisis, onView, onDonate }: CrisisCardProps
           </div>
           <div className="w-full bg-border/30 rounded-full h-2 overflow-hidden">
             <div
-              className="h-full bg-gradient-to-r from-primary to-accent transition-all duration-500"
+              className="h-full bg-linear-to-r from-primary to-accent transition-all duration-500"
               style={{ width: `${Math.min(fundingPercentage, 100)}%` }}
             />
           </div>

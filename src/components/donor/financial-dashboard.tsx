@@ -69,7 +69,7 @@ export default function DonorFinancialDashboard({ metrics, impactSummary }: Dono
       </div>
 
       {/* Impact Summary */}
-      <div className="bg-gradient-to-br from-primary/10 via-background to-accent/5 border border-primary/30 rounded-lg p-6">
+      <div className="bg-linear-to-br from-primary/10 via-background to-accent/5 border border-primary/30 rounded-lg p-6">
         <h2 className="text-lg font-bold text-foreground mb-4">Impact Summary</h2>
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           <div className="text-center">

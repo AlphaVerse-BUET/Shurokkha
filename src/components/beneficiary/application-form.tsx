@@ -483,7 +483,7 @@ export default function BeneficiaryApplicationForm() {
           </div>
 
           <div className="bg-green-500/10 border border-green-500/30 rounded-lg p-3 text-sm text-green-700 flex gap-2">
-            <CheckCircle className="w-5 h-5 flex-shrink-0" />
+            <CheckCircle className="w-5 h-5 shrink-0" />
             <p>All documents will be AI-verified within 24-48 hours. You will receive SMS updates at each stage.</p>
           </div>
 

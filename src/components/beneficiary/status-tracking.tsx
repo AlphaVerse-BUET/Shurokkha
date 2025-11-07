@@ -8,11 +8,12 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { DistributionProofViewer } from "@/components/shared/distribution-proof-viewer"
+import { ApplicationTimeline } from "@/components/beneficiary/application-timeline"
 
 export default function BeneficiaryStatusTracking() {
   const beneficiary = mockBeneficiaries[0]
   const status = useBeneficiaryStatus(beneficiary)
-  const { statusLabel, statusColor, progress, timelineStages, nextAction, verificationBadge } = status
+  const { statusLabel, statusColor, progress, verificationBadge, nextAction } = status
   
   const [showDistributionProof, setShowDistributionProof] = useState(false)
   
@@ -28,7 +29,7 @@ export default function BeneficiaryStatusTracking() {
   return (
     <div className="max-w-2xl mx-auto space-y-6">
       {/* Current Status */}
-      <div className="bg-gradient-to-r from-accent/20 to-primary/10 border border-accent/30 rounded-lg p-6">
+      <div className="bg-linear-to-r from-accent/20 to-primary/10 border border-accent/30 rounded-lg p-6">
         <div className="flex items-center justify-between">
           <div className="flex-1">
             <div className="flex items-center gap-2 mb-1">
@@ -41,7 +42,7 @@ export default function BeneficiaryStatusTracking() {
               <div className={`h-full ${statusColor} transition-all`} style={{ width: `${progress}%` }} />
             </div>
           </div>
-          <CheckCircle className="w-16 h-16 text-green-600 flex-shrink-0" />
+          <CheckCircle className="w-16 h-16 text-green-600 shrink-0" />
         </div>
       </div>
 
@@ -51,53 +52,8 @@ export default function BeneficiaryStatusTracking() {
         <p className="text-sm text-blue-600">{nextAction}</p>
       </div>
 
-      {/* Journey timeline */}
-      <div className="bg-card border border-border/50 rounded-lg p-6">
-        <h3 className="text-lg font-bold text-foreground mb-6">Application Journey</h3>
-
-        <div className="space-y-4">
-          {timelineStages.map((stage, index) => (
-            <div key={stage.id} className="flex gap-4">
-              {/* Timeline line and dot */}
-              <div className="flex flex-col items-center">
-                <div
-                  className={`w-10 h-10 rounded-full flex items-center justify-center border-2 transition-all ${
-                    stage.completed
-                      ? "bg-green-600/20 border-green-600 text-green-600"
-                      : "bg-border/50 border-border text-foreground/60"
-                  }`}
-                  data-testid={`timeline-stage-${stage.id}`}
-                >
-                  {stage.completed ? <CheckCircle className="w-5 h-5" /> : <Clock className="w-5 h-5" />}
-                </div>
-                {index < timelineStages.length - 1 && (
-                  <div 
-                    className={`w-1 flex-1 my-2 transition-all min-h-[40px] ${
-                      stage.completed ? "bg-green-600/30" : "bg-border/50"
-                    }`} 
-                  />
-                )}
-              </div>
-
-              {/* Content */}
-              <div className="pb-4 flex-1">
-                <h4 className="font-semibold text-foreground">{stage.label}</h4>
-                {stage.completed && stage.date && (
-                  <p className="text-xs text-foreground/60 mt-1">
-                    Completed on {new Date(stage.date).toLocaleDateString()}
-                  </p>
-                )}
-                {!stage.completed && (
-                  <p className="text-xs text-muted-foreground mt-1">
-                    Waiting...
-                  </p>
-                )}
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-
+      {/* Application Timeline - Same as Dashboard */}
+      <ApplicationTimeline beneficiary={beneficiary} provider={provider} showProofStatus={true} />
       {/* Allocation Details */}
       {beneficiary.allocationDate && (
         <div className="bg-card border border-border/50 rounded-lg p-6 space-y-4">
@@ -156,14 +112,14 @@ export default function BeneficiaryStatusTracking() {
           <h3 className="text-lg font-bold text-foreground mb-4">Provider Information</h3>
           <div className="space-y-3">
             <div className="flex items-start gap-3">
-              <User className="w-5 h-5 text-accent flex-shrink-0 mt-0.5" />
+              <User className="w-5 h-5 text-accent shrink-0 mt-0.5" />
               <div>
                 <p className="text-sm text-foreground/70">Organization</p>
                 <p className="font-semibold text-foreground">{provider.organizationName}</p>
               </div>
             </div>
             <div className="flex items-start gap-3">
-              <MapPin className="w-5 h-5 text-accent flex-shrink-0 mt-0.5" />
+              <MapPin className="w-5 h-5 text-accent shrink-0 mt-0.5" />
               <div>
                 <p className="text-sm text-foreground/70">Operating Area</p>
                 <p className="font-semibold text-foreground">{provider.geographicFocus.divisions.join(", ")}</p>

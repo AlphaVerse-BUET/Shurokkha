@@ -85,7 +85,7 @@ export default function NewCrisisPage() {
 
   if (submitted) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-background to-green-500/5">
+      <div className="min-h-screen flex items-center justify-center bg-linear-to-b from-background to-green-500/5">
         <Card className="p-12 text-center max-w-md">
           <CheckCircle className="w-16 h-16 text-green-600 mx-auto mb-4" />
           <h2 className="text-2xl font-bold mb-2">Crisis Created Successfully</h2>
@@ -97,7 +97,7 @@ export default function NewCrisisPage() {
   }
 
   return (
-    <main className="min-h-screen bg-gradient-to-b from-background via-background to-red-900/5">
+    <main className="min-h-screen bg-linear-to-b from-background via-background to-red-900/5">
       <div className="max-w-4xl mx-auto px-4 py-8">
         <div className="mb-8">
           <h1 className="text-4xl font-bold mb-2">Create New Crisis</h1>

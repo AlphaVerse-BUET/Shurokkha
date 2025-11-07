@@ -13,8 +13,10 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Badge } from "@/components/ui/badge"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { ProfileImageUpload } from "@/components/profile/profile-image-upload"
+import { ProofUpload } from "@/components/beneficiary/proof-upload"
+import { MultipleProviderApplications } from "@/components/beneficiary/multiple-provider-applications"
 import { useAppStore } from "@/store/app-store"
-import { mockBeneficiaries } from "@/store/mock-data"
+import { mockBeneficiaries, mockProviders } from "@/store/mock-data"
 import { useToast } from "@/hooks/use-toast"
 
 export default function BeneficiaryProfilePage() {
@@ -74,8 +76,9 @@ export default function BeneficiaryProfilePage() {
       </div>
 
       <Tabs defaultValue="personal" className="space-y-6">
-        <TabsList className="grid w-full grid-cols-3">
+        <TabsList className="grid w-full grid-cols-4">
           <TabsTrigger value="personal">Personal Info</TabsTrigger>
+          <TabsTrigger value="applications">Applications</TabsTrigger>
           <TabsTrigger value="privacy">Privacy</TabsTrigger>
           <TabsTrigger value="documents">Documents</TabsTrigger>
         </TabsList>
@@ -174,6 +177,13 @@ export default function BeneficiaryProfilePage() {
           </Card>
         </TabsContent>
 
+        <TabsContent value="applications" className="space-y-6">
+          <MultipleProviderApplications 
+            beneficiary={beneficiaryData} 
+            providers={mockProviders}
+          />
+        </TabsContent>
+
         <TabsContent value="privacy" className="space-y-6">
           <Card>
             <CardHeader>
@@ -221,13 +231,48 @@ export default function BeneficiaryProfilePage() {
         </TabsContent>
 
         <TabsContent value="documents" className="space-y-6">
+          <ProofUpload
+            title="Crisis Proof Documents"
+            description="Upload photos or videos proving your crisis situation. These help providers verify your case."
+            existingProofs={beneficiaryData.crisisProofImages}
+            maxFiles={5}
+            onFilesChange={(files) => {
+              console.log("New proof files uploaded:", files)
+              // In production, this would upload to server
+            }}
+          />
+
           <Card>
             <CardHeader>
-              <CardTitle>Verification Documents</CardTitle>
-              <CardDescription>Manage your verification documents</CardDescription>
+              <CardTitle>Verification Status</CardTitle>
+              <CardDescription>Document verification history</CardDescription>
             </CardHeader>
-            <CardContent>
-              <p className="text-sm text-muted-foreground">Document management coming soon...</p>
+            <CardContent className="space-y-3">
+              <div className="flex items-center justify-between p-3 border rounded-lg">
+                <div className="flex items-center gap-3">
+                  <div className="h-10 w-10 rounded-full bg-green-100 dark:bg-green-900 flex items-center justify-center">
+                    <Shield className="h-5 w-5 text-green-600 dark:text-green-400" />
+                  </div>
+                  <div>
+                    <p className="font-medium">National ID Card</p>
+                    <p className="text-sm text-muted-foreground">Verified on {new Date(beneficiaryData.appliedDate).toLocaleDateString()}</p>
+                  </div>
+                </div>
+                <Badge className="bg-green-500 text-white">Verified</Badge>
+              </div>
+
+              <div className="flex items-center justify-between p-3 border rounded-lg">
+                <div className="flex items-center gap-3">
+                  <div className="h-10 w-10 rounded-full bg-green-100 dark:bg-green-900 flex items-center justify-center">
+                    <Shield className="h-5 w-5 text-green-600 dark:text-green-400" />
+                  </div>
+                  <div>
+                    <p className="font-medium">Crisis Proof Images</p>
+                    <p className="text-sm text-muted-foreground">{beneficiaryData.crisisProofImages.length} documents uploaded</p>
+                  </div>
+                </div>
+                <Badge className="bg-green-500 text-white">AI Verified</Badge>
+              </div>
             </CardContent>
           </Card>
         </TabsContent>

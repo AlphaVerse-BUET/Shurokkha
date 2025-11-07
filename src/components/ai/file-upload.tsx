@@ -175,7 +175,7 @@ export function FileUpload({
             <Card key={file.id} className="p-4">
               <div className="flex items-start gap-3">
                 {/* File Icon */}
-                <div className="flex-shrink-0">
+                <div className="shrink-0">
                   {file.type.startsWith("image/") ? (
                     <ImageIcon className="h-8 w-8 text-blue-500" />
                   ) : (
@@ -217,9 +217,9 @@ export function FileUpload({
                       )}
                     >
                       {file.aiValidation.status === "valid" ? (
-                        <CheckCircle2 className="h-4 w-4 flex-shrink-0 mt-0.5" />
+                        <CheckCircle2 className="h-4 w-4 shrink-0 mt-0.5" />
                       ) : (
-                        <AlertCircle className="h-4 w-4 flex-shrink-0 mt-0.5" />
+                        <AlertCircle className="h-4 w-4 shrink-0 mt-0.5" />
                       )}
                       <div className="flex-1 min-w-0">
                         <p className="text-xs font-medium">

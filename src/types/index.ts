@@ -185,12 +185,26 @@ export interface Beneficiary {
   accountNumber: string
 
   // Status
-  applicationStatus: "submitted" | "verified" | "matched" | "in-progress" | "completed" | "pending"
+  applicationStatus: "submitted" | "verified" | "matched" | "in-progress" | "completed" | "pending" | "rejected"
   verificationStatus: "pending" | "verified" | "rejected" | "under-review"
   privacyMode: "anonymous" | "limited" | "full"
   allocatedProviderId?: string
+  rejectionReason?: string
 
-  // Ratings
+  // Multiple provider applications
+  providerApplications?: {
+    providerId: string
+    status: "applied" | "accepted" | "rejected" | "in-progress" | "completed"
+    appliedDate: string
+    responseDate?: string
+    rejectionReason?: string
+    completionDate?: string
+    amountReceived?: number
+    rating?: number
+    feedback?: string
+  }[]
+
+  // Ratings (legacy - kept for backward compatibility)
   providerRating?: number
   providerFeedback?: string
   impactStory?: string

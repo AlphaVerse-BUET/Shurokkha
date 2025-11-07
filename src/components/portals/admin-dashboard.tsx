@@ -35,7 +35,7 @@ export default function AdminDashboard() {
   }, [])
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-background via-background to-red-900/5">
+    <div className="min-h-screen bg-linear-to-b from-background via-background to-red-900/5">
       {/* Header */}
       <header className="border-b border-border/40 bg-background/80 backdrop-blur sticky top-0 z-40">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">

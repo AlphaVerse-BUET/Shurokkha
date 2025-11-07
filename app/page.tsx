@@ -20,7 +20,7 @@ export default function Home() {
   }, [isAuthenticated, router])
 
   return (
-    <main className="min-h-screen bg-gradient-to-br from-background via-background to-primary/5">
+    <main className="min-h-screen bg-linear-to-br from-background via-background to-primary/5">
       {/* Hero Section */}
       <section className="max-w-7xl mx-auto px-4 py-20">
         <div className="text-center space-y-6 mb-16">
@@ -75,7 +75,7 @@ export default function Home() {
 
         {/* Key Features */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-20">
-          <Card className="p-8 bg-gradient-to-br from-green-50 to-green-100 dark:from-green-950 dark:to-green-900 border-green-200">
+          <Card className="p-8 bg-linear-to-br from-green-50 to-green-100 dark:from-green-950 dark:to-green-900 border-green-200">
             <Shield className="w-12 h-12 text-green-600 mb-4" />
             <h3 className="font-bold text-2xl mb-3">100% Transparency</h3>
             <p className="text-muted-foreground leading-relaxed">
@@ -83,7 +83,7 @@ export default function Home() {
               every step.
             </p>
           </Card>
-          <Card className="p-8 bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-950 dark:to-blue-900 border-blue-200">
+          <Card className="p-8 bg-linear-to-br from-blue-50 to-blue-100 dark:from-blue-950 dark:to-blue-900 border-blue-200">
             <Sparkles className="w-12 h-12 text-blue-600 mb-4" />
             <h3 className="font-bold text-2xl mb-3">&lt;1% Fraud Rate</h3>
             <p className="text-muted-foreground leading-relaxed">
@@ -91,7 +91,7 @@ export default function Home() {
               fraud pattern detection.
             </p>
           </Card>
-          <Card className="p-8 bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-950 dark:to-purple-900 border-purple-200">
+          <Card className="p-8 bg-linear-to-br from-purple-50 to-purple-100 dark:from-purple-950 dark:to-purple-900 border-purple-200">
             <Zap className="w-12 h-12 text-purple-600 mb-4" />
             <h3 className="font-bold text-2xl mb-3">5-Day Delivery</h3>
             <p className="text-muted-foreground leading-relaxed">
@@ -101,7 +101,7 @@ export default function Home() {
         </div>
 
         {/* Stats Section */}
-        <Card className="p-12 bg-gradient-to-r from-primary/10 via-secondary/10 to-accent/10 border-primary/20">
+        <Card className="p-12 bg-linear-to-r from-primary/10 via-secondary/10 to-accent/10 border-primary/20">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
             <div>
               <TrendingUp className="w-8 h-8 mx-auto mb-3 text-primary" />
@@ -163,7 +163,7 @@ export default function Home() {
 
         {/* CTA Section */}
         <div className="mt-20 text-center">
-          <Card className="p-12 bg-gradient-to-r from-primary to-secondary text-primary-foreground">
+          <Card className="p-12 bg-linear-to-r from-primary to-secondary text-primary-foreground">
             <h2 className="text-4xl font-bold mb-4">Ready to Make a Difference?</h2>
             <p className="text-xl mb-8 opacity-90">Join thousands of donors creating transparent impact</p>
             <div className="flex gap-4 justify-center">

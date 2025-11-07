@@ -85,7 +85,7 @@ export default function CreateBeneficiaryProfilePage() {
   }
 
   return (
-    <main className="min-h-screen bg-gradient-to-b from-background via-background to-accent/5 pb-12">
+    <main className="min-h-screen bg-linear-to-b from-background via-background to-accent/5 pb-12">
       <div className="max-w-3xl mx-auto px-4 py-8">
         <div className="mb-8">
           <h1 className="text-4xl font-bold mb-2">Create Your Profile</h1>

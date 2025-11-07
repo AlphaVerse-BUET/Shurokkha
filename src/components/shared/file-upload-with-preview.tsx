@@ -205,7 +205,7 @@ export default function FileUploadWithPreview({
           {/* File Info */}
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3 min-w-0">
-              <div className="flex-shrink-0">{getFileIcon()}</div>
+              <div className="shrink-0">{getFileIcon()}</div>
               <div className="min-w-0">
                 <p className="text-sm font-medium text-foreground truncate">{file?.name}</p>
                 <p className="text-xs text-muted-foreground">
@@ -213,7 +213,7 @@ export default function FileUploadWithPreview({
                 </p>
               </div>
             </div>
-            <Button variant="ghost" size="sm" onClick={handleRemove} className="flex-shrink-0">
+            <Button variant="ghost" size="sm" onClick={handleRemove} className="shrink-0">
               <X className="w-4 h-4" />
             </Button>
           </div>

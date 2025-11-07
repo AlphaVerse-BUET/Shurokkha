@@ -82,7 +82,7 @@ export default function ProviderBeneficiariesPage() {
   const uniqueDivisions = Array.from(new Set(compatibleBeneficiaries.map(b => b.location.division)))
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-background via-background to-secondary/5">
+    <div className="min-h-screen bg-linear-to-b from-background via-background to-secondary/5">
       <div className="max-w-7xl mx-auto px-4 py-8">
         {/* Header */}
         <div className="flex items-center gap-4 mb-6">
@@ -220,8 +220,23 @@ export default function ProviderBeneficiariesPage() {
             <Card>
               <CardContent className="py-12 text-center">
                 <Users className="h-16 w-16 text-muted-foreground/30 mx-auto mb-4" />
-                <p className="text-lg font-medium text-muted-foreground">No beneficiaries found</p>
-                <p className="text-sm text-muted-foreground mt-2">Try adjusting your filters</p>
+                <p className="text-lg font-medium text-muted-foreground">
+                  {compatibleBeneficiaries.length === 0 
+                    ? "No matching beneficiaries available" 
+                    : "No beneficiaries found"}
+                </p>
+                <p className="text-sm text-muted-foreground mt-2">
+                  {compatibleBeneficiaries.length === 0 
+                    ? `No beneficiaries match your organization's specialization (${provider.specialization.join(", ")}) and geographic focus (${provider.geographicFocus.divisions.join(", ")}).` 
+                    : "Try adjusting your filters to see more results"}
+                </p>
+                {compatibleBeneficiaries.length === 0 && (
+                  <div className="mt-6 p-4 bg-blue-50 dark:bg-blue-950 border border-blue-200 dark:border-blue-800 rounded-lg max-w-md mx-auto">
+                    <p className="text-sm text-blue-700 dark:text-blue-300">
+                      <strong>Tip:</strong> Beneficiaries are matched based on your organization's specialization and service areas. Consider expanding your geographic focus or specialization in your profile settings.
+                    </p>
+                  </div>
+                )}
               </CardContent>
             </Card>
           ) : (
@@ -297,6 +312,11 @@ export default function ProviderBeneficiariesPage() {
                           <CheckCircle className="h-3 w-3 mr-1" />
                           {beneficiary.verificationStatus}
                         </Badge>
+                        {/* Show matched services badge */}
+                        <Badge className="bg-blue-600 text-white">
+                          <Users className="h-3 w-3 mr-1" />
+                          Matched to Your Services
+                        </Badge>
                         {beneficiary.crisisProofImages.length > 0 && (
                           <Badge variant="outline" className="gap-1">
                             <FileText className="h-3 w-3" />
@@ -352,7 +372,7 @@ export default function ProviderBeneficiariesPage() {
               {/* Profile Image and Basic Info */}
               <div className="flex items-start gap-6">
                 {selectedBeneficiary.profileImage && selectedBeneficiary.privacyMode !== "anonymous" && (
-                  <div className="h-32 w-32 rounded-lg overflow-hidden bg-muted flex-shrink-0">
+                  <div className="h-32 w-32 rounded-lg overflow-hidden bg-muted shrink-0">
                     <img 
                       src={selectedBeneficiary.profileImage} 
                       alt="Profile" 

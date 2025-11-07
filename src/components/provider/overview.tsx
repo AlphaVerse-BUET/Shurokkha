@@ -21,7 +21,7 @@ export default function ProviderOverview({ provider, metrics }: ProviderOverview
   return (
     <div className="space-y-6">
       {/* Trust Score Card */}
-      <div className="bg-gradient-to-br from-secondary/20 via-background to-secondary/5 border border-secondary/30 rounded-lg p-6">
+      <div className="bg-linear-to-br from-secondary/20 via-background to-secondary/5 border border-secondary/30 rounded-lg p-6">
         <div className="flex items-center justify-between mb-4">
           <div>
             <p className="text-sm text-foreground/70">Trust Score</p>

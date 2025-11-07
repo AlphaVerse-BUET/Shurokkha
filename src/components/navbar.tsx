@@ -13,6 +13,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { CurrencySelector } from "@/components/shared/currency-selector"
 
 export function Navbar() {
   const { currentUser, logout, currentRole } = useAppStore()
@@ -48,9 +49,10 @@ export function Navbar() {
           🤝 Shurokkha
         </Link>
 
-        <div className="flex gap-4 items-center">
+        <div className="flex gap-2 items-center">
           {currentUser && (
             <>
+              <CurrencySelector />
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button variant="ghost" className="flex items-center gap-2">

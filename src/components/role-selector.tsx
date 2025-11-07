@@ -50,7 +50,7 @@ export default function RoleSelector({ onSelectRole }: RoleSelectorProps) {
   ]
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-primary/5 to-background flex items-center justify-center p-4">
+    <div className="min-h-screen bg-linear-to-b from-primary/5 to-background flex items-center justify-center p-4">
       <div className="w-full max-w-4xl">
         <div className="mb-12 text-center">
           <h1 className="text-5xl font-bold text-foreground mb-4 text-balance">Shurokkha</h1>

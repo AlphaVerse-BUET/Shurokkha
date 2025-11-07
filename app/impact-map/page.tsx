@@ -16,7 +16,7 @@ export default function ImpactMapPage() {
   }, [isAuthenticated, currentRole, router])
 
   return (
-    <main className="min-h-screen bg-gradient-to-b from-background via-background to-accent/5">
+    <main className="min-h-screen bg-linear-to-b from-background via-background to-accent/5">
       <div className="max-w-6xl mx-auto px-4 py-8">
         <div className="mb-8">
           <h1 className="text-4xl font-bold mb-2">Your Impact Map</h1>
@@ -25,7 +25,7 @@ export default function ImpactMapPage() {
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <div className="lg:col-span-2">
-            <Card className="p-6 aspect-video bg-gradient-to-br from-primary/5 via-secondary/5 to-accent/5 flex items-center justify-center">
+            <Card className="p-6 aspect-video bg-linear-to-br from-primary/5 via-secondary/5 to-accent/5 flex items-center justify-center">
               <div className="text-center space-y-4">
                 <div className="text-6xl">🗺️</div>
                 <h3 className="text-xl font-bold">Bangladesh Impact Heatmap</h3>

@@ -18,8 +18,8 @@ import {
 import { mockBeneficiaries, mockProviders, mockDistributionProofs } from "@/store/mock-data"
 import { useRouter } from "next/navigation"
 import { useBeneficiaryStatus } from "@/hooks/use-beneficiary-status"
-import { Badge } from "@/components/ui/badge"
 import { DistributionProofViewer } from "@/components/shared/distribution-proof-viewer"
+import { ApplicationTimeline } from "@/components/beneficiary/application-timeline"
 import { useState } from "react"
 
 export default function BeneficiaryDashboard() {
@@ -102,112 +102,8 @@ export default function BeneficiaryDashboard() {
         </Card>
       </div>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Application Timeline</CardTitle>
-          <CardDescription>Track your application progress</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            <div className="flex gap-4">
-              <div className="flex flex-col items-center">
-                <div className="h-8 w-8 rounded-full bg-green-500 flex items-center justify-center">
-                  <CheckCircle className="h-4 w-4 text-white" />
-                </div>
-                <div className="w-0.5 h-full bg-green-500 mt-2" />
-              </div>
-              <div className="flex-1 pb-8">
-                <p className="font-semibold">Application Submitted</p>
-                <p className="text-sm text-muted-foreground">
-                  {new Date(beneficiary.appliedDate).toLocaleDateString()}
-                </p>
-                <p className="text-xs text-muted-foreground mt-1">
-                  Your application has been received and is under review
-                </p>
-              </div>
-            </div>
-
-            <div className="flex gap-4">
-              <div className="flex flex-col items-center">
-                <div
-                  className={`h-8 w-8 rounded-full ${beneficiary.verificationStatus === "verified" ? "bg-green-500" : "bg-muted"} flex items-center justify-center`}
-                >
-                  <CheckCircle
-                    className={`h-4 w-4 ${beneficiary.verificationStatus === "verified" ? "text-white" : "text-muted-foreground"}`}
-                  />
-                </div>
-                {beneficiary.allocatedProviderId && (
-                  <div
-                    className={`w-0.5 h-full ${beneficiary.allocatedProviderId ? "bg-green-500" : "bg-muted"} mt-2`}
-                  />
-                )}
-              </div>
-              <div className="flex-1 pb-8">
-                <p className="font-semibold">Verification Complete</p>
-                <p className="text-sm text-muted-foreground">
-                  {beneficiary.verificationStatus === "verified" ? "Verified" : "Pending verification"}
-                </p>
-                <p className="text-xs text-muted-foreground mt-1">Documents and eligibility verified</p>
-              </div>
-            </div>
-
-            {beneficiary.allocatedProviderId && (
-              <div className="flex gap-4">
-                <div className="flex flex-col items-center">
-                  <div
-                    className={`h-8 w-8 rounded-full ${beneficiary.allocationDate ? "bg-green-500" : "bg-muted"} flex items-center justify-center`}
-                  >
-                    <Users
-                      className={`h-4 w-4 ${beneficiary.allocationDate ? "text-white" : "text-muted-foreground"}`}
-                    />
-                  </div>
-                  {beneficiary.applicationStatus === "in-progress" && <div className="w-0.5 h-full bg-blue-500 mt-2" />}
-                  {beneficiary.applicationStatus === "completed" && <div className="w-0.5 h-full bg-green-500 mt-2" />}
-                </div>
-                <div className="flex-1 pb-8">
-                  <p className="font-semibold">Matched with Provider</p>
-                  <p className="text-sm text-muted-foreground">
-                    {beneficiary.allocationDate && new Date(beneficiary.allocationDate).toLocaleDateString()}
-                  </p>
-                  <p className="text-xs text-muted-foreground mt-1">Provider assigned to your case</p>
-                </div>
-              </div>
-            )}
-
-            {beneficiary.applicationStatus === "in-progress" && (
-              <div className="flex gap-4">
-                <div className="flex flex-col items-center">
-                  <div className="h-8 w-8 rounded-full bg-blue-500 flex items-center justify-center animate-pulse">
-                    <Clock className="h-4 w-4 text-white" />
-                  </div>
-                </div>
-                <div className="flex-1">
-                  <p className="font-semibold">Distribution in Progress</p>
-                  <p className="text-sm text-muted-foreground">Currently being processed</p>
-                  <p className="text-xs text-muted-foreground mt-1">Provider is preparing your aid package</p>
-                </div>
-              </div>
-            )}
-
-            {beneficiary.applicationStatus === "completed" && (
-              <div className="flex gap-4">
-                <div className="flex flex-col items-center">
-                  <div className="h-8 w-8 rounded-full bg-green-500 flex items-center justify-center">
-                    <Package className="h-4 w-4 text-white" />
-                  </div>
-                </div>
-                <div className="flex-1">
-                  <p className="font-semibold">Aid Distributed</p>
-                  <p className="text-sm text-muted-foreground">
-                    {beneficiary.completionDate && new Date(beneficiary.completionDate).toLocaleDateString()}
-                  </p>
-                  <p className="text-xs text-muted-foreground mt-1">Successfully received assistance</p>
-                </div>
-              </div>
-            )}
-          </div>
-        </CardContent>
-      </Card>
+      {/* Application Timeline - Unified Component */}
+      <ApplicationTimeline beneficiary={beneficiary} provider={provider} showProofStatus={true} />
 
       {provider && (
         <Card>
@@ -217,7 +113,7 @@ export default function BeneficiaryDashboard() {
           </CardHeader>
           <CardContent>
             <div className="flex items-start gap-4">
-              <div className="h-16 w-16 rounded-full bg-accent/20 flex items-center justify-center flex-shrink-0">
+              <div className="h-16 w-16 rounded-full bg-accent/20 flex items-center justify-center shrink-0">
                 <Users className="h-8 w-8 text-accent" />
               </div>
               <div className="flex-1 space-y-3">

@@ -106,7 +106,7 @@ export default function AIVerificationDisplay({
     <Card className={`p-6 border-2 ${statusConfig.bgColor}`} data-testid="ai-verification-display">
       {/* Overall Status */}
       <div className="flex items-start gap-4 mb-6">
-        <div className={`${statusConfig.color} flex-shrink-0`}>{statusConfig.icon}</div>
+        <div className={`${statusConfig.color} shrink-0`}>{statusConfig.icon}</div>
         <div className="flex-1">
           <h3 className={`text-lg font-bold ${statusConfig.color} flex items-center gap-2`}>
             <Sparkles className="w-5 h-5" />
@@ -151,7 +151,7 @@ export default function AIVerificationDisplay({
                 data-testid={`verification-check-${check.label.toLowerCase().replace(/\s+/g, "-")}`}
               >
                 <div className="flex items-start gap-3">
-                  <div className="flex-shrink-0 mt-0.5">{getStatusIcon(check.status)}</div>
+                  <div className="shrink-0 mt-0.5">{getStatusIcon(check.status)}</div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center justify-between">
                       <p className="text-sm font-medium">{check.label}</p>
@@ -184,7 +184,7 @@ export default function AIVerificationDisplay({
           <ul className="space-y-1">
             {issues.map((issue, index) => (
               <li key={index} className="text-xs text-red-600 flex items-start gap-2">
-                <span className="flex-shrink-0 mt-0.5">•</span>
+                <span className="shrink-0 mt-0.5">•</span>
                 <span>{issue}</span>
               </li>
             ))}

@@ -71,7 +71,7 @@ export default function ProviderMatchingPool({ provider, metrics }: ProviderMatc
   return (
     <div className="space-y-6">
       {/* Summary */}
-      <div className="bg-gradient-to-r from-primary/10 to-secondary/10 border border-primary/30 rounded-lg p-6">
+      <div className="bg-linear-to-r from-primary/10 to-secondary/10 border border-primary/30 rounded-lg p-6">
         <div className="flex justify-between items-center">
           <div>
             <p className="text-sm text-foreground/70 flex items-center gap-2">
@@ -122,7 +122,7 @@ export default function ProviderMatchingPool({ provider, metrics }: ProviderMatc
                 data-testid={`beneficiary-card-${beneficiary.id}`}
               >
                 <div className="flex gap-4">
-                  <div className="relative w-16 h-16 flex-shrink-0">
+                  <div className="relative w-16 h-16 shrink-0">
                     <Image
                       src={beneficiary.profileImage || "/placeholder.svg"}
                       alt={beneficiary.fullName}
