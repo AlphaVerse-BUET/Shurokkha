@@ -1,9 +1,13 @@
 "use client"
 
-import { mockBeneficiaries } from "@/store/mock-data"
-import { CheckCircle, Clock, MapPin, User } from "lucide-react"
+import { useState } from "react"
+import { mockBeneficiaries, mockProviders, mockDistributionProofs } from "@/store/mock-data"
+import { CheckCircle, Clock, MapPin, User, Package } from "lucide-react"
 import { useBeneficiaryStatus } from "@/hooks/use-beneficiary-status"
 import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { DistributionProofViewer } from "@/components/shared/distribution-proof-viewer"
 
 export default function BeneficiaryStatusTracking() {
   const beneficiary = mockBeneficiaries[0]
