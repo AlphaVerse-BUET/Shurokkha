@@ -1,9 +1,13 @@
 "use client"
 
-import { mockCrises, mockBeneficiaries, mockProviders } from "@/store/mock-data"
+import { useState } from "react"
+import { mockCrises, mockBeneficiaries, mockProviders, mockDistributionProofs } from "@/store/mock-data"
 import type { BeneficiaryAllocation } from "@/types"
-import { ChevronRight, CheckCircle, Clock, AlertCircle } from "lucide-react"
+import { ChevronRight, CheckCircle, Clock, AlertCircle, Eye, Package } from "lucide-react"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Button } from "@/components/ui/button"
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog"
+import { DistributionProofViewer } from "@/components/shared/distribution-proof-viewer"
 
 interface DonorAllocationTableProps {
   allocations: BeneficiaryAllocation[]
