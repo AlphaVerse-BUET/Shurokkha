@@ -15,10 +15,12 @@ import {
   Phone,
   FileText,
 } from "lucide-react"
-import { mockBeneficiaries, mockProviders } from "@/store/mock-data"
+import { mockBeneficiaries, mockProviders, mockDistributionProofs } from "@/store/mock-data"
 import { useRouter } from "next/navigation"
 import { useBeneficiaryStatus } from "@/hooks/use-beneficiary-status"
 import { Badge } from "@/components/ui/badge"
+import { DistributionProofViewer } from "@/components/shared/distribution-proof-viewer"
+import { useState } from "react"
 
 export default function BeneficiaryDashboard() {
   const router = useRouter()
