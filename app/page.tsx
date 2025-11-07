@@ -14,6 +14,7 @@ import { LiveFraudDetectionShowcase } from "@/components/homepage/live-fraud-det
 import { ImpactMetricsDashboard } from "@/components/homepage/impact-metrics-dashboard"
 import { WhyShurokkha } from "@/components/homepage/why-shurokkha"
 import { useCurrency } from "@/contexts/currency-context"
+import { RealTimeNeedsHeatmap } from "@/components/ai-features"
 
 export default function Home() {
   const { isAuthenticated } = useAppStore()
@@ -166,6 +167,13 @@ export default function Home() {
               </Card>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* Real-time Needs Heatmap Section */}
+      <section className="w-full py-12 md:py-20 px-4 bg-muted/30">
+        <div className="max-w-6xl mx-auto">
+          <RealTimeNeedsHeatmap />
         </div>
       </section>
 

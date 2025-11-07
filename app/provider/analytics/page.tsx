@@ -5,6 +5,7 @@ import { Card } from "@/components/ui/card"
 import { useRouter } from "next/navigation"
 import { useEffect } from "react"
 import { BarChart3, Eye, Users, TrendingUp } from "lucide-react"
+import { ProviderPerformanceOptimizer } from "@/components/ai-features"
 
 export default function AnalyticsPage() {
   const router = useRouter()
@@ -60,6 +61,24 @@ export default function AnalyticsPage() {
             <div className="text-4xl font-bold text-orange-600">4m 32s</div>
             <div className="text-xs text-muted-foreground mt-2">Avg per visit</div>
           </Card>
+        </div>
+
+        {/* AI Performance Optimizer */}
+        <div className="mb-8">
+          <ProviderPerformanceOptimizer 
+            providerName="Your Organization"
+            metrics={{
+              trustScore: 88,
+              completionRate: 92,
+              averageResponseTime: 18,
+              averageRating: 4.5,
+              activeBeneficiaries: 1245,
+              maxCapacity: 2000,
+              fraudIncidents: 2,
+              totalAided: 5000,
+              yearsActive: 5,
+            }}
+          />
         </div>
 
         <Card className="p-6">

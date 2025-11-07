@@ -71,9 +71,10 @@ export function LiveFraudDetectionShowcase() {
     let eventIndex = 0
     const interval = setInterval(() => {
       if (eventIndex < mockEvents.length) {
-        setEvents((prev) => [mockEvents[eventIndex], ...prev])
-        if (mockEvents[eventIndex].type === "prevented" && mockEvents[eventIndex].amount) {
-          setTotalPrevented((prev) => prev + mockEvents[eventIndex].amount!)
+        const currentEvent = mockEvents[eventIndex]
+        setEvents((prev) => [currentEvent, ...prev])
+        if (currentEvent.type === "prevented" && currentEvent.amount) {
+          setTotalPrevented((prev) => prev + (currentEvent.amount || 0))
         }
         eventIndex++
       } else {

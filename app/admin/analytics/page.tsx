@@ -21,6 +21,7 @@ import {
   ResponsiveContainer,
 } from "recharts"
 import { TrendingUp, Users, DollarSign, Activity } from "lucide-react"
+import { AICrisisRiskAnalyzer } from "@/components/ai-features"
 
 const monthlyGrowth = [
   { month: "Jan", donors: 120, providers: 8, beneficiaries: 450 },
@@ -123,6 +124,11 @@ export default function AnalyticsPage() {
             <div className="text-3xl font-bold text-orange-600">{activeCrises}</div>
             <div className="text-xs text-orange-600 mt-2">Needs attention</div>
           </Card>
+        </div>
+
+        {/* AI Crisis Risk Analyzer */}
+        <div className="mb-8">
+          <AICrisisRiskAnalyzer />
         </div>
 
         {/* Growth Trends */}
