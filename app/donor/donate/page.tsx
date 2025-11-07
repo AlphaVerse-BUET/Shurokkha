@@ -11,6 +11,7 @@ import { mockCrises, mockProviders } from "@/store/mock-data"
 import { aiImpactPrediction, aiSmartMatching } from "@/lib/ai-engines"
 import type { Donation } from "@/types"
 import { useCurrency } from "@/contexts/currency-context"
+import { SmartDonationRecommender } from "@/components/ai-features"
 
 export default function NewDonationPage() {
   const { currentUser, currentRole } = useAppStore()
@@ -64,6 +65,20 @@ export default function NewDonationPage() {
     <main className="min-h-screen bg-background pb-12">
       <div className="max-w-6xl mx-auto px-4 py-8">
         <h1 className="text-3xl font-bold mb-8">Make a Donation</h1>
+
+        {/* AI Smart Donation Recommender */}
+        <div className="mb-8">
+          <SmartDonationRecommender 
+            availableCrises={mockCrises}
+            donorHistory={{
+              totalDonated: Number.parseInt(amount) || 10000,
+              averageDonation: Number.parseInt(amount) || 10000,
+              preferredCrisisTypes: [],
+              lastDonationDate: new Date().toISOString(),
+              donationCount: 0,
+            }}
+          />
+        </div>
 
         <div className="grid grid-cols-3 gap-6">
           {/* Crisis Selection */}

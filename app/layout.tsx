@@ -7,6 +7,7 @@ import { Navbar } from "@/components/navbar"
 import { Footer } from "@/components/layout/footer"
 import { Toaster } from "@/components/ui/toaster"
 import { CurrencyProvider } from "@/contexts/currency-context"
+import { FloatingChatButton } from "@/components/ai-chatbot"
 
 const _geist = Geist({ subsets: ["latin"] })
 const _geistMono = Geist_Mono({ subsets: ["latin"] })
@@ -30,6 +31,7 @@ export default function RootLayout({
           <main className="flex-1">{children}</main>
           <Footer />
           <Toaster />
+          <FloatingChatButton />
         </CurrencyProvider>
         <Analytics />
       </body>

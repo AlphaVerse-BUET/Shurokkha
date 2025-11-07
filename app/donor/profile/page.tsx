@@ -13,6 +13,7 @@ import { ProfileImageUpload } from "@/components/profile/profile-image-upload"
 import { useAppStore } from "@/store/app-store"
 import { mockDonors } from "@/store/mock-data"
 import { useToast } from "@/hooks/use-toast"
+import { DonorPortfolioAnalyzer } from "@/components/ai-features"
 
 export default function DonorProfilePage() {
   const router = useRouter()
@@ -71,8 +72,9 @@ export default function DonorProfilePage() {
       </div>
 
       <Tabs defaultValue="personal" className="space-y-6">
-        <TabsList className="grid w-full grid-cols-3">
+        <TabsList className="grid w-full grid-cols-4">
           <TabsTrigger value="personal">Personal Info</TabsTrigger>
+          <TabsTrigger value="portfolio">AI Portfolio</TabsTrigger>
           <TabsTrigger value="preferences">Preferences</TabsTrigger>
           <TabsTrigger value="security">Security</TabsTrigger>
         </TabsList>
@@ -165,6 +167,15 @@ export default function DonorProfilePage() {
               </div>
             </CardContent>
           </Card>
+        </TabsContent>
+
+        {/* AI Portfolio Tab */}
+        <TabsContent value="portfolio" className="space-y-6">
+          <DonorPortfolioAnalyzer 
+            donorName={formData.name}
+            donations={[]}
+            joinDate={donorData.createdAt}
+          />
         </TabsContent>
 
         {/* Preferences Tab */}
