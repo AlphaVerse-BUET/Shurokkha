@@ -285,6 +285,39 @@ export default function BeneficiaryDashboard() {
         </Card>
       )}
 
+      {/* Distribution Proof - For Completed Cases */}
+      {beneficiary.applicationStatus === "completed" && distributionProof && (
+        <Card>
+          <CardHeader>
+            <div className="flex items-center justify-between">
+              <div>
+                <CardTitle className="flex items-center gap-2">
+                  <Package className="h-5 w-5 text-green-600" />
+                  Distribution Verification
+                </CardTitle>
+                <CardDescription>Photos and documents from your aid distribution</CardDescription>
+              </div>
+              <Button 
+                variant={showDistributionProof ? "outline" : "default"} 
+                onClick={() => setShowDistributionProof(!showDistributionProof)}
+                data-testid="btn-toggle-distribution-proof"
+              >
+                {showDistributionProof ? "Hide Proof" : "View Proof"}
+              </Button>
+            </div>
+          </CardHeader>
+          {showDistributionProof && (
+            <CardContent>
+              <DistributionProofViewer 
+                proof={distributionProof} 
+                beneficiaryName={beneficiary.fullName}
+                showAIVerification={true}
+              />
+            </CardContent>
+          )}
+        </Card>
+      )}
+
       {beneficiary.applicationStatus === "pending" && (
         <Card className="border-yellow-500/30 bg-yellow-500/5">
           <CardHeader>
