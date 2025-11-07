@@ -13,6 +13,17 @@ export default function BeneficiaryStatusTracking() {
   const beneficiary = mockBeneficiaries[0]
   const status = useBeneficiaryStatus(beneficiary)
   const { statusLabel, statusColor, progress, timelineStages, nextAction, verificationBadge } = status
+  
+  const [showDistributionProof, setShowDistributionProof] = useState(false)
+  
+  const provider = beneficiary.allocatedProviderId
+    ? mockProviders.find((p) => p.id === beneficiary.allocatedProviderId)
+    : null
+  
+  // Find distribution proof
+  const distributionProof = beneficiary.applicationStatus === "completed" 
+    ? mockDistributionProofs.find(proof => proof.allocationId === "alloc-1" || proof.allocationId === "alloc-7")
+    : null
 
   return (
     <div className="max-w-2xl mx-auto space-y-6">
