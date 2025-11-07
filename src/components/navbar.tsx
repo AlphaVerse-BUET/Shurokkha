@@ -1,49 +1,49 @@
-"use client"
+"use client";
 
-import { useAppStore } from "@/store/app-store"
-import Link from "next/link"
-import { useRouter } from "next/navigation"
-import { Button } from "@/components/ui/button"
-import { User, Settings, LogOut, ChevronDown } from "lucide-react"
+import { useAppStore } from "@/store/app-store";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { Button } from "@/components/ui/button";
+import { User, Settings, LogOut, ChevronDown } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { CurrencySelector } from "@/components/shared/currency-selector"
+} from "@/components/ui/dropdown-menu";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { CurrencySelector } from "@/components/shared/currency-selector";
 
 export function Navbar() {
-  const { currentUser, logout, currentRole } = useAppStore()
-  const router = useRouter()
+  const { currentUser, logout, currentRole } = useAppStore();
+  const router = useRouter();
 
   const handleLogout = () => {
-    logout()
-    router.push("/auth/login")
-  }
+    logout();
+    router.push("/auth/login");
+  };
 
   const getProfileRoute = () => {
     switch (currentRole) {
       case "donor":
-        return "/donor/profile"
+        return "/donor/profile";
       case "provider":
-        return "/provider/profile"
+        return "/provider/profile";
       case "beneficiary":
-        return "/beneficiary/profile"
+        return "/beneficiary/profile";
       case "admin":
-        return "/admin/profile"
+        return "/admin/profile";
       default:
-        return "/dashboard"
+        return "/dashboard";
     }
-  }
+  };
 
   return (
     <nav className="border-b border-border bg-background/95 backdrop-blur sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
         <Link
-          href={currentUser ? "/dashboard" : "/"}
+          href="/"
           className="text-2xl font-bold text-primary flex items-center gap-2"
         >
           🤝 Shurokkha
@@ -52,23 +52,44 @@ export function Navbar() {
         <div className="flex gap-2 items-center">
           {currentUser && (
             <>
+              <Link href="/dashboard">
+                <Button variant="ghost" size="sm">
+                  Dashboard
+                </Button>
+              </Link>
+              <Link href="/crises">
+                <Button variant="ghost" size="sm">
+                  View Crises
+                </Button>
+              </Link>
               <CurrencySelector />
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button variant="ghost" className="flex items-center gap-2">
                     <Avatar className="w-8 h-8">
-                      <AvatarImage src={currentUser.profileImage || "/placeholder.svg"} alt={currentUser.name} />
-                      <AvatarFallback>{currentUser.name.charAt(0)}</AvatarFallback>
+                      <AvatarImage
+                        src={currentUser.profileImage || "/placeholder.svg"}
+                        alt={currentUser.name}
+                      />
+                      <AvatarFallback>
+                        {currentUser.name.charAt(0)}
+                      </AvatarFallback>
                     </Avatar>
                     <div className="text-left hidden md:block">
-                      <div className="text-sm font-medium text-foreground">{currentUser.name}</div>
-                      <div className="text-xs text-muted-foreground capitalize">{currentRole}</div>
+                      <div className="text-sm font-medium text-foreground">
+                        {currentUser.name}
+                      </div>
+                      <div className="text-xs text-muted-foreground capitalize">
+                        {currentRole}
+                      </div>
                     </div>
                     <ChevronDown className="w-4 h-4 text-muted-foreground" />
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-56">
-                  <DropdownMenuItem onClick={() => router.push(getProfileRoute())}>
+                  <DropdownMenuItem
+                    onClick={() => router.push(getProfileRoute())}
+                  >
                     <User className="w-4 h-4 mr-2" />
                     View Profile
                   </DropdownMenuItem>
@@ -77,7 +98,10 @@ export function Navbar() {
                     Settings
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem onClick={handleLogout} className="text-destructive">
+                  <DropdownMenuItem
+                    onClick={handleLogout}
+                    className="text-destructive"
+                  >
                     <LogOut className="w-4 h-4 mr-2" />
                     Logout
                   </DropdownMenuItem>
@@ -86,14 +110,21 @@ export function Navbar() {
             </>
           )}
           {!currentUser && (
-            <Link href="/auth/login">
-              <Button variant="default" size="sm">
-                Login
-              </Button>
-            </Link>
+            <>
+              <Link href="/auth/login">
+                <Button variant="outline" size="sm">
+                  Login
+                </Button>
+              </Link>
+              <Link href="/auth/signup">
+                <Button variant="default" size="sm">
+                  Get Started
+                </Button>
+              </Link>
+            </>
           )}
         </div>
       </div>
     </nav>
-  )
+  );
 }

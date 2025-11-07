@@ -1,22 +1,26 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { useRouter, useSearchParams } from "next/navigation"
-import { useAppStore } from "@/store/app-store"
-import { mockDonors, mockProviders, mockBeneficiaries } from "@/store/mock-data"
-import { Button } from "@/components/ui/button"
-import { Card } from "@/components/ui/card"
-import Link from "next/link"
-import type { UserRole } from "@/types"
+import { useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useAppStore } from "@/store/app-store";
+import {
+  mockDonors,
+  mockProviders,
+  mockBeneficiaries,
+} from "@/store/mock-data";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import Link from "next/link";
+import type { UserRole } from "@/types";
 
 export default function LoginPage() {
-  const router = useRouter()
-  const searchParams = useSearchParams()
-  const { login } = useAppStore()
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const { login } = useAppStore();
 
-  const initialRole = (searchParams.get("role") as UserRole) || "donor"
-  const [selectedRole, setSelectedRole] = useState<UserRole>(initialRole)
-  const [selectedUser, setSelectedUser] = useState<string | null>(null)
+  const initialRole = (searchParams.get("role") as UserRole) || "donor";
+  const [selectedRole, setSelectedRole] = useState<UserRole>(initialRole);
+  const [selectedUser, setSelectedUser] = useState<string | null>(null);
 
   const userOptions = {
     donor: mockDonors.map((d) => ({ ...d, label: `${d.name} (${d.email})` })),
@@ -53,7 +57,7 @@ export default function LoginPage() {
       },
     ],
     guest: [],
-  }
+  };
 
   const handleLogin = (userOrId: any) => {
     if (selectedRole === "provider") {
@@ -65,7 +69,7 @@ export default function LoginPage() {
         role: "provider",
         verified: userOrId.verified,
         createdAt: userOrId.createdAt,
-      })
+      });
     } else if (selectedRole === "beneficiary") {
       login({
         id: userOrId.id,
@@ -75,7 +79,7 @@ export default function LoginPage() {
         role: "beneficiary",
         verified: true,
         createdAt: userOrId.appliedDate,
-      })
+      });
     } else if (selectedRole === "admin") {
       login({
         id: userOrId.id,
@@ -85,14 +89,14 @@ export default function LoginPage() {
         role: "admin",
         verified: true,
         createdAt: userOrId.createdAt,
-      })
+      });
     } else {
-      login(userOrId)
+      login(userOrId);
     }
-    router.push("/dashboard")
-  }
+    router.push("/dashboard");
+  };
 
-  const options = userOptions[selectedRole as keyof typeof userOptions] || []
+  const options = userOptions[selectedRole as keyof typeof userOptions] || [];
 
   return (
     <div className="min-h-screen bg-linear-to-br from-background via-background to-secondary/5 flex items-center justify-center p-4">
@@ -105,39 +109,49 @@ export default function LoginPage() {
         <div className="space-y-3">
           <label className="text-sm font-medium">User Role</label>
           <div className="grid grid-cols-2 gap-2">
-            {(["donor", "provider", "beneficiary", "admin"] as UserRole[]).map((role) => (
-              <button
-                key={role}
-                onClick={() => {
-                  setSelectedRole(role)
-                  setSelectedUser(null)
-                }}
-                className={`p-3 rounded-lg border-2 transition font-medium capitalize ${
-                  selectedRole === role ? "border-primary bg-primary/10" : "border-border hover:border-primary/50"
-                }`}
-              >
-                {role === "provider" && "🏢"}
-                {role === "donor" && "💰"}
-                {role === "beneficiary" && "🙏"}
-                {role === "admin" && "⚙️"} {role}
-              </button>
-            ))}
+            {(["donor", "provider", "beneficiary", "admin"] as UserRole[]).map(
+              (role) => (
+                <button
+                  key={role}
+                  onClick={() => {
+                    setSelectedRole(role);
+                    setSelectedUser(null);
+                  }}
+                  className={`p-3 rounded-lg border-2 transition font-medium capitalize ${
+                    selectedRole === role
+                      ? "border-primary bg-primary/10"
+                      : "border-border hover:border-primary/50"
+                  }`}
+                >
+                  {role === "provider" && "🏢"}
+                  {role === "donor" && "💰"}
+                  {role === "beneficiary" && "🙏"}
+                  {role === "admin" && "⚙️"} {role}
+                </button>
+              )
+            )}
           </div>
         </div>
 
         <div className="space-y-3">
-          <label className="text-sm font-medium">Select {selectedRole} Account</label>
+          <label className="text-sm font-medium">
+            Select {selectedRole} Account
+          </label>
           <div className="space-y-2 max-h-96 overflow-y-auto">
             {options.map((user) => (
               <button
                 key={user.id}
                 onClick={() => setSelectedUser(user.id)}
                 className={`w-full p-3 rounded-lg border-2 transition text-left ${
-                  selectedUser === user.id ? "border-primary bg-primary/10" : "border-border hover:border-primary/50"
+                  selectedUser === user.id
+                    ? "border-primary bg-primary/10"
+                    : "border-border hover:border-primary/50"
                 }`}
               >
                 <div className="font-medium">{user.label}</div>
-                <div className="text-xs text-muted-foreground">{user.email}</div>
+                <div className="text-xs text-muted-foreground">
+                  {user.email}
+                </div>
               </button>
             ))}
           </div>
@@ -146,8 +160,8 @@ export default function LoginPage() {
         <Button
           onClick={() => {
             if (selectedUser && options.length > 0) {
-              const user = options.find((u) => u.id === selectedUser)
-              if (user) handleLogin(user)
+              const user = options.find((u) => u.id === selectedUser);
+              if (user) handleLogin(user);
             }
           }}
           disabled={!selectedUser}
@@ -157,6 +171,16 @@ export default function LoginPage() {
           Login
         </Button>
 
+        <div className="text-center text-sm">
+          <span className="text-muted-foreground">Don't have an account? </span>
+          <Link
+            href="/auth/signup"
+            className="text-primary font-medium hover:underline"
+          >
+            Sign up here
+          </Link>
+        </div>
+
         <div className="text-center text-sm text-muted-foreground">
           <Link href="/" className="hover:text-primary">
             Back to Home
@@ -164,5 +188,5 @@ export default function LoginPage() {
         </div>
       </Card>
     </div>
-  )
+  );
 }

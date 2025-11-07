@@ -1,61 +1,86 @@
-"use client"
+"use client";
 
-import { useState, useMemo } from "react"
-import { useAppStore } from "@/store/app-store"
-import { mockDonations } from "@/store/mock-data"
-import DonorFinancialDashboard from "@/components/donor/financial-dashboard"
-import DonorAllocationTable from "@/components/donor/allocation-table"
-import DonorImpactTracking from "@/components/donor/impact-tracking"
-import DonorFundRecovery from "@/components/donor/fund-recovery"
-import DonorGamification from "@/components/donor/gamification"
-import { Wallet, TrendingUp, History, Settings, Sparkles, User } from "lucide-react"
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
-import { useRouter } from "next/navigation"
+import { useState, useMemo } from "react";
+import { useAppStore } from "@/store/app-store";
+import { mockDonations } from "@/store/mock-data";
+import DonorFinancialDashboard from "@/components/donor/financial-dashboard";
+import DonorAllocationTable from "@/components/donor/allocation-table";
+import DonorImpactTracking from "@/components/donor/impact-tracking";
+import DonorFundRecovery from "@/components/donor/fund-recovery";
+import DonorGamification from "@/components/donor/gamification";
+import {
+  AIInsightsCard,
+  generateDonorInsights,
+} from "../../../components/shared/ai-insights-card";
+import {
+  Wallet,
+  TrendingUp,
+  History,
+  Settings,
+  Sparkles,
+  User,
+} from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { useRouter } from "next/navigation";
 
 export default function DonorDashboard() {
-  const { currentUser } = useAppStore()
-  const [activeTab, setActiveTab] = useState<"overview" | "allocations" | "impact" | "recovery" | "profile">("overview")
-  const router = useRouter()
+  const { currentUser } = useAppStore();
+  const [activeTab, setActiveTab] = useState<
+    "overview" | "allocations" | "impact" | "recovery" | "profile"
+  >("overview");
+  const router = useRouter();
 
   // Get donor-specific data
   const donorAllocations = useMemo(() => {
-    const donor = mockDonations.find((d) => d.donorId === currentUser?.id) || mockDonations[0]
-    return donor.allocations || []
-  }, [currentUser?.id])
+    const donor =
+      mockDonations.find((d) => d.donorId === currentUser?.id) ||
+      mockDonations[0];
+    return donor.allocations || [];
+  }, [currentUser?.id]);
 
   // Calculate wallet metrics
   const walletMetrics = useMemo(() => {
-    const donations = mockDonations.filter((d) => d.donorId === currentUser?.id)
-    const totalDonated = donations.reduce((sum, d) => sum + d.amount, 0)
+    const donations = mockDonations.filter(
+      (d) => d.donorId === currentUser?.id
+    );
+    const totalDonated = donations.reduce((sum, d) => sum + d.amount, 0);
     const totalAllocated = donations.reduce(
-      (sum, d) => sum + d.allocations.reduce((aSum, a) => aSum + a.allocatedAmount, 0),
-      0,
-    )
-    const totalFees = donations.reduce((sum, d) => sum + d.transactionFee, 0)
-    const available = totalDonated - totalAllocated - totalFees
+      (sum, d) =>
+        sum + d.allocations.reduce((aSum, a) => aSum + a.allocatedAmount, 0),
+      0
+    );
+    const totalFees = donations.reduce((sum, d) => sum + d.transactionFee, 0);
+    const available = totalDonated - totalAllocated - totalFees;
 
     return {
       totalDonated,
       allocated: totalAllocated,
       available,
       fees: totalFees,
-    }
-  }, [currentUser?.id])
+    };
+  }, [currentUser?.id]);
 
   // Calculate impact summary
   const impactSummary = useMemo(() => {
-    const beneficiariesHelped = new Set(donorAllocations.map((a) => a.beneficiaryId)).size
-    const allocationsCompleted = donorAllocations.filter((a) => a.status === "completed").length
-    const completionRate = donorAllocations.length > 0 ? (allocationsCompleted / donorAllocations.length) * 100 : 0
+    const beneficiariesHelped = new Set(
+      donorAllocations.map((a) => a.beneficiaryId)
+    ).size;
+    const allocationsCompleted = donorAllocations.filter(
+      (a) => a.status === "completed"
+    ).length;
+    const completionRate =
+      donorAllocations.length > 0
+        ? (allocationsCompleted / donorAllocations.length) * 100
+        : 0;
 
     return {
       beneficiariesHelped,
       allocationsCompleted,
       completionRate,
       totalAllocations: donorAllocations.length,
-    }
-  }, [donorAllocations])
+    };
+  }, [donorAllocations]);
 
   return (
     <div className="min-h-screen bg-linear-to-b from-background via-background to-accent/5">
@@ -71,10 +96,16 @@ export default function DonorDashboard() {
                   AI-Powered
                 </Badge>
               </h1>
-              <p className="text-sm text-foreground/60 mt-1">Welcome back, {currentUser?.name}</p>
+              <p className="text-sm text-foreground/60 mt-1">
+                Welcome back, {currentUser?.name}
+              </p>
             </div>
             {/* Profile button */}
-            <Button onClick={() => router.push("/donor/profile")} variant="outline" className="gap-2">
+            <Button
+              onClick={() => router.push("/donor/profile")}
+              variant="outline"
+              className="gap-2"
+            >
               <User className="w-4 h-4" />
               My Profile
             </Button>
@@ -109,20 +140,36 @@ export default function DonorDashboard() {
         {/* Overview Tab */}
         {activeTab === "overview" && (
           <div className="space-y-6">
-            <DonorFinancialDashboard metrics={walletMetrics} impactSummary={impactSummary} />
+            <DonorFinancialDashboard
+              metrics={walletMetrics}
+              impactSummary={impactSummary}
+            />
             <DonorGamification donorId={currentUser?.id || ""} />
+            <AIInsightsCard
+              insights={generateDonorInsights({
+                totalDonated: walletMetrics.totalDonated,
+                allocations: donorAllocations.length,
+                completionRate: impactSummary.completionRate,
+              })}
+            />
           </div>
         )}
 
         {/* Allocations Tab */}
-        {activeTab === "allocations" && <DonorAllocationTable allocations={donorAllocations} />}
+        {activeTab === "allocations" && (
+          <DonorAllocationTable allocations={donorAllocations} />
+        )}
 
         {/* Impact Tab */}
-        {activeTab === "impact" && <DonorImpactTracking allocations={donorAllocations} />}
+        {activeTab === "impact" && (
+          <DonorImpactTracking allocations={donorAllocations} />
+        )}
 
         {/* Fund Recovery Tab */}
-        {activeTab === "recovery" && <DonorFundRecovery metrics={walletMetrics} />}
+        {activeTab === "recovery" && (
+          <DonorFundRecovery metrics={walletMetrics} />
+        )}
       </div>
     </div>
-  )
+  );
 }

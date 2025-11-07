@@ -1,27 +1,28 @@
-import type React from "react"
-import type { Metadata } from "next"
-import { Geist, Geist_Mono } from "next/font/google"
-import { Analytics } from "@vercel/analytics/next"
-import "./globals.css"
-import { Navbar } from "@/components/navbar"
-import { Footer } from "@/components/layout/footer"
-import { Toaster } from "@/components/ui/toaster"
-import { CurrencyProvider } from "@/contexts/currency-context"
-import { FloatingChatButton } from "@/components/ai-chatbot"
+import type React from "react";
+import type { Metadata } from "next";
+import { Geist, Geist_Mono } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next";
+import "./globals.css";
+import { Navbar } from "@/components/navbar";
+import { Footer } from "@/components/layout/footer";
+import { Toaster } from "@/components/ui/toaster";
+import { CurrencyProvider } from "@/contexts/currency-context";
+import { FloatingChatButton } from "@/components/ai-chatbot";
 
-const _geist = Geist({ subsets: ["latin"] })
-const _geistMono = Geist_Mono({ subsets: ["latin"] })
+const _geist = Geist({ subsets: ["latin"] });
+const _geistMono = Geist_Mono({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Shurokkha - Transparent Donation Platform",
-  description: "AI-powered transparent donation platform for Bangladesh humanitarian aid",
+  description:
+    "AI-powered transparent donation platform for Bangladesh humanitarian aid",
   generator: "v0.app",
-}
+};
 
 export default function RootLayout({
   children,
 }: Readonly<{
-  children: React.ReactNode
+  children: React.ReactNode;
 }>) {
   return (
     <html lang="en">
@@ -36,5 +37,5 @@ export default function RootLayout({
         <Analytics />
       </body>
     </html>
-  )
+  );
 }

@@ -1,31 +1,54 @@
-"use client"
+"use client";
 
-import { useState, useMemo } from "react"
-import { useAppStore } from "@/store/app-store"
-import { useCurrency } from "@/contexts/currency-context"
-import AdminFinancialCenter from "@/components/admin/financial-center"
-import AdminFraudDetection from "@/components/admin/fraud-detection"
-import AdminCrisisManagement from "@/components/admin/crisis-management"
-import AdminProviderManagement from "@/components/admin/provider-management"
-import { BarChart3, AlertTriangle, Globe, Users, Shield, Plus, User } from "lucide-react"
-import { Badge } from "@/components/ui/badge"
-import { mockDonations, mockProviders } from "@/store/mock-data"
-import { Button } from "@/components/ui/button"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
-import { useRouter } from "next/navigation"
+import { useState, useMemo } from "react";
+import { useAppStore } from "@/store/app-store";
+import { useCurrency } from "@/contexts/currency-context";
+import AdminFinancialCenter from "@/components/admin/financial-center";
+import AdminFraudDetection from "@/components/admin/fraud-detection";
+import AdminCrisisManagement from "@/components/admin/crisis-management";
+import AdminProviderManagement from "@/components/admin/provider-management";
+import {
+  BarChart3,
+  AlertTriangle,
+  Globe,
+  Users,
+  Shield,
+  Plus,
+  User,
+} from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { mockDonations, mockProviders } from "@/store/mock-data";
+import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { useRouter } from "next/navigation";
 
 export default function AdminDashboard() {
-  const { currentUser } = useAppStore()
-  const { formatAbbreviated } = useCurrency()
-  const [activeTab, setActiveTab] = useState<"financial" | "fraud" | "crises" | "providers">("financial")
-  const router = useRouter()
+  const { currentUser } = useAppStore();
+  const { formatAbbreviated } = useCurrency();
+  const [activeTab, setActiveTab] = useState<
+    "financial" | "fraud" | "crises" | "providers"
+  >("financial");
+  const router = useRouter();
 
   // Calculate key metrics
   const metrics = useMemo(() => {
-    const totalDonated = mockDonations.reduce((sum, d) => sum + d.amount, 0)
-    const totalFees = mockDonations.reduce((sum, d) => sum + d.transactionFee, 0)
-    const activeProviders = mockProviders.filter((p) => p.status === "active").length
-    const totalBeneficiaries = mockProviders.reduce((sum, p) => sum + p.totalAidedBeneficiaries, 0)
+    const totalDonated = mockDonations.reduce((sum, d) => sum + d.amount, 0);
+    const totalFees = mockDonations.reduce(
+      (sum, d) => sum + d.transactionFee,
+      0
+    );
+    const activeProviders = mockProviders.filter(
+      (p) => p.status === "active"
+    ).length;
+    const totalBeneficiaries = mockProviders.reduce(
+      (sum, p) => sum + p.totalAidedBeneficiaries,
+      0
+    );
 
     return {
       totalDonated,
@@ -33,8 +56,8 @@ export default function AdminDashboard() {
       activeProviders,
       totalBeneficiaries,
       platformHealth: 98,
-    }
-  }, [])
+    };
+  }, []);
 
   return (
     <div className="min-h-screen bg-linear-to-b from-background via-background to-red-900/5">
@@ -50,7 +73,9 @@ export default function AdminDashboard() {
                   AI Fraud Detection
                 </Badge>
               </h1>
-              <p className="text-sm text-foreground/60 mt-1">Platform Oversight & Fraud Prevention</p>
+              <p className="text-sm text-foreground/60 mt-1">
+                Welcome back, Admin {currentUser?.name || "User"}
+              </p>
             </div>
             <div className="flex gap-2">
               <DropdownMenu>
@@ -61,16 +86,30 @@ export default function AdminDashboard() {
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
-                  <DropdownMenuItem onClick={() => router.push("/admin/create-crisis")}>Add Crisis</DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => router.push("/admin/providers/add")}>Add Provider</DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => router.push("/admin/beneficiaries/add")}>
+                  <DropdownMenuItem
+                    onClick={() => router.push("/admin/create-crisis")}
+                  >
+                    Add Crisis
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    onClick={() => router.push("/admin/providers/add")}
+                  >
+                    Add Provider
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    onClick={() => router.push("/admin/beneficiaries/add")}
+                  >
                     Add Beneficiary
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
-              <Button onClick={() => router.push("/admin/profile")} variant="outline" className="gap-2">
+              <Button
+                onClick={() => router.push("/admin/profile")}
+                variant="outline"
+                className="gap-2"
+              >
                 <User className="w-4 h-4" />
-                Profile
+                My Profile
               </Button>
             </div>
           </div>
@@ -78,23 +117,37 @@ export default function AdminDashboard() {
           {/* Quick metrics */}
           <div className="grid grid-cols-2 md:grid-cols-5 gap-3 mb-4">
             <div className="bg-card border border-border/50 rounded-lg p-3 text-center">
-              <div className="text-2xl font-bold text-primary">{formatAbbreviated(metrics.totalDonated)}</div>
+              <div className="text-2xl font-bold text-primary">
+                {formatAbbreviated(metrics.totalDonated)}
+              </div>
               <p className="text-xs text-foreground/60 mt-1">Total Donations</p>
             </div>
             <div className="bg-card border border-border/50 rounded-lg p-3 text-center">
-              <div className="text-2xl font-bold text-accent">{formatAbbreviated(metrics.totalFees)}</div>
+              <div className="text-2xl font-bold text-accent">
+                {formatAbbreviated(metrics.totalFees)}
+              </div>
               <p className="text-xs text-foreground/60 mt-1">Platform Fees</p>
             </div>
             <div className="bg-card border border-border/50 rounded-lg p-3 text-center">
-              <div className="text-2xl font-bold text-secondary">{metrics.activeProviders}</div>
-              <p className="text-xs text-foreground/60 mt-1">Active Providers</p>
+              <div className="text-2xl font-bold text-secondary">
+                {metrics.activeProviders}
+              </div>
+              <p className="text-xs text-foreground/60 mt-1">
+                Active Providers
+              </p>
             </div>
             <div className="bg-card border border-border/50 rounded-lg p-3 text-center">
-              <div className="text-2xl font-bold text-green-600">{metrics.totalBeneficiaries.toLocaleString()}</div>
-              <p className="text-xs text-foreground/60 mt-1">Beneficiaries Helped</p>
+              <div className="text-2xl font-bold text-green-600">
+                {metrics.totalBeneficiaries.toLocaleString()}
+              </div>
+              <p className="text-xs text-foreground/60 mt-1">
+                Beneficiaries Helped
+              </p>
             </div>
             <div className="bg-card border border-border/50 rounded-lg p-3 text-center">
-              <div className="text-2xl font-bold text-blue-600">{metrics.platformHealth}%</div>
+              <div className="text-2xl font-bold text-blue-600">
+                {metrics.platformHealth}%
+              </div>
               <p className="text-xs text-foreground/60 mt-1">Platform Health</p>
             </div>
           </div>
@@ -125,11 +178,13 @@ export default function AdminDashboard() {
       </header>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {activeTab === "financial" && <AdminFinancialCenter metrics={metrics} />}
+        {activeTab === "financial" && (
+          <AdminFinancialCenter metrics={metrics} />
+        )}
         {activeTab === "fraud" && <AdminFraudDetection />}
         {activeTab === "crises" && <AdminCrisisManagement />}
         {activeTab === "providers" && <AdminProviderManagement />}
       </div>
     </div>
-  )
+  );
 }

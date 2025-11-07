@@ -1,18 +1,20 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { useAppStore } from "@/store/app-store"
-import BeneficiaryApplicationFormImproved from "@/components/beneficiary/application-form-improved"
-import BeneficiaryStatusTracking from "@/components/beneficiary/status-tracking"
-import BeneficiaryPrivacyControls from "@/components/beneficiary/privacy-controls"
-import BeneficiaryDashboard from "@/components/portals/beneficiary-dashboard"
-import ProviderBrowser from "@/components/beneficiary/provider-browser"
-import { FileText, Clock, Shield, Home, Sparkles, Users } from "lucide-react"
-import { Badge } from "@/components/ui/badge"
+import { useState } from "react";
+import { useAppStore } from "@/store/app-store";
+import BeneficiaryApplicationFormImproved from "@/components/beneficiary/application-form-improved";
+import BeneficiaryStatusTracking from "@/components/beneficiary/status-tracking";
+import BeneficiaryPrivacyControls from "@/components/beneficiary/privacy-controls";
+import BeneficiaryDashboard from "@/components/portals/beneficiary-dashboard";
+import ProviderBrowser from "@/components/beneficiary/provider-browser";
+import { FileText, Clock, Shield, Home, Sparkles, Users } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 
 export default function BeneficiaryPortal() {
-  const { currentUser } = useAppStore()
-  const [activeTab, setActiveTab] = useState<"dashboard" | "providers" | "apply" | "status" | "privacy">("dashboard")
+  const { currentUser } = useAppStore();
+  const [activeTab, setActiveTab] = useState<
+    "overview" | "providers" | "apply" | "status" | "privacy"
+  >("overview");
 
   return (
     <div className="min-h-screen bg-linear-to-b from-background via-background to-accent/5">
@@ -28,14 +30,16 @@ export default function BeneficiaryPortal() {
                   AI-Protected
                 </Badge>
               </h1>
-              <p className="text-sm text-foreground/60 mt-1">Hello, {currentUser?.name || "Guest"}</p>
+              <p className="text-sm text-foreground/60 mt-1">
+                Welcome back, {currentUser?.name || "Guest"}
+              </p>
             </div>
           </div>
 
           {/* Tab navigation */}
           <div className="flex gap-2 overflow-x-auto pb-4">
             {[
-              { id: "dashboard", label: "Dashboard", icon: Home },
+              { id: "overview", label: "Overview", icon: Home },
               { id: "providers", label: "Browse Providers", icon: Users },
               { id: "apply", label: "New Application", icon: FileText },
               { id: "status", label: "Track Application", icon: Clock },
@@ -59,12 +63,12 @@ export default function BeneficiaryPortal() {
       </header>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {activeTab === "dashboard" && <BeneficiaryDashboard />}
+        {activeTab === "overview" && <BeneficiaryDashboard />}
         {activeTab === "providers" && <ProviderBrowser />}
         {activeTab === "apply" && <BeneficiaryApplicationFormImproved />}
         {activeTab === "status" && <BeneficiaryStatusTracking />}
         {activeTab === "privacy" && <BeneficiaryPrivacyControls />}
       </div>
     </div>
-  )
+  );
 }
