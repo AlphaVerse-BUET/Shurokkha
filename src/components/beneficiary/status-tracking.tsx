@@ -1,14 +1,29 @@
 "use client"
 
-import { mockBeneficiaries } from "@/store/mock-data"
-import { CheckCircle, Clock, MapPin, User } from "lucide-react"
+import { useState } from "react"
+import { mockBeneficiaries, mockProviders, mockDistributionProofs } from "@/store/mock-data"
+import { CheckCircle, Clock, MapPin, User, Package } from "lucide-react"
 import { useBeneficiaryStatus } from "@/hooks/use-beneficiary-status"
 import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { DistributionProofViewer } from "@/components/shared/distribution-proof-viewer"
 
 export default function BeneficiaryStatusTracking() {
   const beneficiary = mockBeneficiaries[0]
   const status = useBeneficiaryStatus(beneficiary)
   const { statusLabel, statusColor, progress, timelineStages, nextAction, verificationBadge } = status
+  
+  const [showDistributionProof, setShowDistributionProof] = useState(false)
+  
+  const provider = beneficiary.allocatedProviderId
+    ? mockProviders.find((p) => p.id === beneficiary.allocatedProviderId)
+    : null
+  
+  // Find distribution proof
+  const distributionProof = beneficiary.applicationStatus === "completed" 
+    ? mockDistributionProofs.find(proof => proof.allocationId === "alloc-1" || proof.allocationId === "alloc-7")
+    : null
 
   return (
     <div className="max-w-2xl mx-auto space-y-6">
@@ -136,25 +151,63 @@ export default function BeneficiaryStatusTracking() {
       )}
 
       {/* Provider info card */}
-      <div className="bg-card border border-border/50 rounded-lg p-6">
-        <h3 className="text-lg font-bold text-foreground mb-4">Provider Information</h3>
-        <div className="space-y-3">
-          <div className="flex items-start gap-3">
-            <User className="w-5 h-5 text-accent flex-shrink-0 mt-0.5" />
-            <div>
-              <p className="text-sm text-foreground/70">Organization</p>
-              <p className="font-semibold text-foreground">BRAC Khulna</p>
+      {provider && (
+        <div className="bg-card border border-border/50 rounded-lg p-6">
+          <h3 className="text-lg font-bold text-foreground mb-4">Provider Information</h3>
+          <div className="space-y-3">
+            <div className="flex items-start gap-3">
+              <User className="w-5 h-5 text-accent flex-shrink-0 mt-0.5" />
+              <div>
+                <p className="text-sm text-foreground/70">Organization</p>
+                <p className="font-semibold text-foreground">{provider.organizationName}</p>
+              </div>
             </div>
-          </div>
-          <div className="flex items-start gap-3">
-            <MapPin className="w-5 h-5 text-accent flex-shrink-0 mt-0.5" />
-            <div>
-              <p className="text-sm text-foreground/70">Operating Area</p>
-              <p className="font-semibold text-foreground">Khulna, Satkhira Division</p>
+            <div className="flex items-start gap-3">
+              <MapPin className="w-5 h-5 text-accent flex-shrink-0 mt-0.5" />
+              <div>
+                <p className="text-sm text-foreground/70">Operating Area</p>
+                <p className="font-semibold text-foreground">{provider.geographicFocus.divisions.join(", ")}</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-2 pt-2">
+              <Badge className="bg-blue-500">Trust Score: {provider.trustScore}/100</Badge>
+              <Badge variant="outline">{provider.completionRate}% Success Rate</Badge>
             </div>
           </div>
         </div>
-      </div>
+      )}
+
+      {/* Distribution Proof */}
+      {beneficiary.applicationStatus === "completed" && distributionProof && (
+        <Card>
+          <CardHeader>
+            <div className="flex items-center justify-between">
+              <div>
+                <CardTitle className="flex items-center gap-2">
+                  <Package className="h-5 w-5 text-green-600" />
+                  Distribution Verification
+                </CardTitle>
+                <CardDescription>AI-verified proof of distribution</CardDescription>
+              </div>
+              <Button 
+                variant={showDistributionProof ? "outline" : "default"} 
+                onClick={() => setShowDistributionProof(!showDistributionProof)}
+              >
+                {showDistributionProof ? "Hide" : "View"} Proof
+              </Button>
+            </div>
+          </CardHeader>
+          {showDistributionProof && (
+            <CardContent>
+              <DistributionProofViewer 
+                proof={distributionProof} 
+                beneficiaryName={beneficiary.fullName}
+                showAIVerification={true}
+              />
+            </CardContent>
+          )}
+        </Card>
+      )}
 
       {/* SMS Notifications history */}
       <div className="bg-card border border-border/50 rounded-lg p-6">

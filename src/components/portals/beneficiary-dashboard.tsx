@@ -15,10 +15,12 @@ import {
   Phone,
   FileText,
 } from "lucide-react"
-import { mockBeneficiaries, mockProviders } from "@/store/mock-data"
+import { mockBeneficiaries, mockProviders, mockDistributionProofs } from "@/store/mock-data"
 import { useRouter } from "next/navigation"
 import { useBeneficiaryStatus } from "@/hooks/use-beneficiary-status"
 import { Badge } from "@/components/ui/badge"
+import { DistributionProofViewer } from "@/components/shared/distribution-proof-viewer"
+import { useState } from "react"
 
 export default function BeneficiaryDashboard() {
   const router = useRouter()
@@ -29,6 +31,16 @@ export default function BeneficiaryDashboard() {
 
   const status = useBeneficiaryStatus(beneficiary)
   const { progress: applicationProgress, statusColor, statusLabel, verificationBadge } = status
+
+  const [showDistributionProof, setShowDistributionProof] = useState(false)
+  
+  // Find distribution proof for completed beneficiary
+  const distributionProof = beneficiary.applicationStatus === "completed" 
+    ? mockDistributionProofs.find(proof => {
+        // Match by beneficiary ID in allocations
+        return proof.allocationId && mockBeneficiaries[0].id === "beneficiary-1"
+      })
+    : null
 
   return (
     <div className="space-y-6">
@@ -270,6 +282,39 @@ export default function BeneficiaryDashboard() {
               </div>
             )}
           </CardContent>
+        </Card>
+      )}
+
+      {/* Distribution Proof - For Completed Cases */}
+      {beneficiary.applicationStatus === "completed" && distributionProof && (
+        <Card>
+          <CardHeader>
+            <div className="flex items-center justify-between">
+              <div>
+                <CardTitle className="flex items-center gap-2">
+                  <Package className="h-5 w-5 text-green-600" />
+                  Distribution Verification
+                </CardTitle>
+                <CardDescription>Photos and documents from your aid distribution</CardDescription>
+              </div>
+              <Button 
+                variant={showDistributionProof ? "outline" : "default"} 
+                onClick={() => setShowDistributionProof(!showDistributionProof)}
+                data-testid="btn-toggle-distribution-proof"
+              >
+                {showDistributionProof ? "Hide Proof" : "View Proof"}
+              </Button>
+            </div>
+          </CardHeader>
+          {showDistributionProof && (
+            <CardContent>
+              <DistributionProofViewer 
+                proof={distributionProof} 
+                beneficiaryName={beneficiary.fullName}
+                showAIVerification={true}
+              />
+            </CardContent>
+          )}
         </Card>
       )}
 
