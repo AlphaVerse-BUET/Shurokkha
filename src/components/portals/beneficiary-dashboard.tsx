@@ -32,6 +32,16 @@ export default function BeneficiaryDashboard() {
   const status = useBeneficiaryStatus(beneficiary)
   const { progress: applicationProgress, statusColor, statusLabel, verificationBadge } = status
 
+  const [showDistributionProof, setShowDistributionProof] = useState(false)
+  
+  // Find distribution proof for completed beneficiary
+  const distributionProof = beneficiary.applicationStatus === "completed" 
+    ? mockDistributionProofs.find(proof => {
+        // Match by beneficiary ID in allocations
+        return proof.allocationId && mockBeneficiaries[0].id === "beneficiary-1"
+      })
+    : null
+
   return (
     <div className="space-y-6">
       <Card>
