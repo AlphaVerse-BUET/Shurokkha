@@ -14,6 +14,9 @@ interface DonorAllocationTableProps {
 }
 
 export default function DonorAllocationTable({ allocations }: DonorAllocationTableProps) {
+  const [selectedAllocation, setSelectedAllocation] = useState<string | null>(null)
+  const [showProof, setShowProof] = useState(false)
+
   const getStatusColor = (status: string) => {
     if (status === "completed") return "bg-green-500/20 text-green-700 border-green-500/30"
     if (status === "verified") return "bg-green-500/20 text-green-700 border-green-500/30"
@@ -27,6 +30,22 @@ export default function DonorAllocationTable({ allocations }: DonorAllocationTab
     if (status === "in-progress") return <Clock className="w-4 h-4" />
     return <AlertCircle className="w-4 h-4" />
   }
+
+  const handleViewProof = (allocationId: string) => {
+    setSelectedAllocation(allocationId)
+    setShowProof(true)
+  }
+
+  const currentProof = selectedAllocation 
+    ? mockDistributionProofs.find(p => p.allocationId === selectedAllocation)
+    : null
+
+  const currentBeneficiary = selectedAllocation
+    ? mockBeneficiaries.find(b => {
+        const allocation = allocations.find(a => a.id === selectedAllocation)
+        return b.id === allocation?.beneficiaryId
+      })
+    : null
 
   return (
     <div className="space-y-4">
