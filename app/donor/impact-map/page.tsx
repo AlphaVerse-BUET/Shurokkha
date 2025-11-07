@@ -7,10 +7,12 @@ import { Card } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { mockDonations, mockCrises, mockBeneficiaries } from "@/store/mock-data"
 import Image from "next/image"
+import { useCurrency } from "@/contexts/currency-context"
 
 export default function ImpactMapPage() {
   const { currentUser, currentRole } = useAppStore()
   const router = useRouter()
+  const { formatAmount } = useCurrency()
   const [stats, setStats] = useState<any>(null)
 
   useEffect(() => {
@@ -42,7 +44,7 @@ export default function ImpactMapPage() {
             {/* Impact Summary */}
             <div className="grid grid-cols-3 gap-4">
               <Card className="p-6 text-center">
-                <div className="text-3xl font-bold text-primary">৳{(stats.totalDonated / 1000).toFixed(0)}K</div>
+                <div className="text-3xl font-bold text-primary">{formatAmount(stats.totalDonated)}</div>
                 <div className="text-sm text-muted-foreground mt-2">Total Donated</div>
               </Card>
               <Card className="p-6 text-center">
@@ -92,7 +94,7 @@ export default function ImpactMapPage() {
                         </div>
                         <Badge>{donation.status}</Badge>
                       </div>
-                      <div className="text-2xl font-bold text-primary mb-3">৳{donation.amount.toLocaleString()}</div>
+                      <div className="text-2xl font-bold text-primary mb-3">{formatAmount(donation.amount)}</div>
 
                       {/* Beneficiaries */}
                       <div className="space-y-2">

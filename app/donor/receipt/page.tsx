@@ -7,10 +7,12 @@ import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { mockDonations, mockCrises, mockBeneficiaries } from "@/store/mock-data"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { useCurrency } from "@/contexts/currency-context"
 
 export default function ReceiptPage() {
   const { currentUser, currentRole } = useAppStore()
   const router = useRouter()
+  const { formatAmount } = useCurrency()
   const [donations, setDonations] = useState<any[]>([])
 
   useEffect(() => {
@@ -95,9 +97,9 @@ export default function ReceiptPage() {
           </div>
 
           <div class="section">
-            <div><span class="label">Donation Amount:</span><span class="value">৳${donation.amount.toLocaleString()}</span></div>
-            <div><span class="label">Transaction Fee (2.5%):</span><span class="value">৳${donation.transactionFee.toFixed(0)}</span></div>
-            <div class="total">Total: ৳${(donation.amount + donation.transactionFee).toLocaleString()}</div>
+            <div><span class="label">Donation Amount:</span><span class="value">${formatAmount(donation.amount)}</span></div>
+            <div><span class="label">Transaction Fee (2.5%):</span><span class="value">${formatAmount(donation.transactionFee)}</span></div>
+            <div class="total">Total: ${formatAmount(donation.amount + donation.transactionFee)}</div>
           </div>
 
           <div class="section">
@@ -141,7 +143,7 @@ export default function ReceiptPage() {
                     <p className="text-sm text-muted-foreground">{donation.crisis?.location.district}</p>
                   </div>
                   <div className="text-right">
-                    <div className="text-2xl font-bold text-primary">৳{donation.amount.toLocaleString()}</div>
+                    <div className="text-2xl font-bold text-primary">{formatAmount(donation.amount)}</div>
                     <p className="text-xs text-muted-foreground">{new Date(donation.createdAt).toLocaleDateString()}</p>
                   </div>
                 </div>

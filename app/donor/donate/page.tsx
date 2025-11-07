@@ -10,10 +10,12 @@ import { Badge } from "@/components/ui/badge"
 import { mockCrises, mockProviders } from "@/store/mock-data"
 import { aiImpactPrediction, aiSmartMatching } from "@/lib/ai-engines"
 import type { Donation } from "@/types"
+import { useCurrency } from "@/contexts/currency-context"
 
 export default function NewDonationPage() {
   const { currentUser, currentRole } = useAppStore()
   const router = useRouter()
+  const { formatAmount, getCurrencySymbol } = useCurrency()
   const [selectedCrisis, setSelectedCrisis] = useState(mockCrises[0])
   const [amount, setAmount] = useState("10000")
   const [providerFilter, setProviderFilter] = useState<string[]>([])
@@ -105,7 +107,7 @@ export default function NewDonationPage() {
               <h2 className="text-xl font-bold mb-4">Donation Amount</h2>
               <div className="space-y-4">
                 <div>
-                  <label className="text-sm font-medium">Amount (৳)</label>
+                  <label className="text-sm font-medium">Amount ({getCurrencySymbol()})</label>
                   <Input
                     type="number"
                     value={amount}
@@ -123,7 +125,7 @@ export default function NewDonationPage() {
                       onClick={() => setAmount(val.toString())}
                       size="sm"
                     >
-                      ৳{(val / 1000).toFixed(0)}K
+                      {formatAmount(val / 1000)}K
                     </Button>
                   ))}
                 </div>
@@ -179,7 +181,7 @@ export default function NewDonationPage() {
                   </div>
                   <p className="text-xs italic text-muted-foreground mt-4">"{impactPrediction.crisisProjection}"</p>
                   <div className="pt-2 border-t text-xs text-muted-foreground">
-                    <strong>Transaction Fee:</strong> ৳{((Number.parseInt(amount) || 0) * 0.025).toFixed(0)} (2.5%)
+                    <strong>Transaction Fee:</strong> {formatAmount((Number.parseInt(amount) || 0) * 0.025)} (2.5%)
                   </div>
                 </div>
               </Card>

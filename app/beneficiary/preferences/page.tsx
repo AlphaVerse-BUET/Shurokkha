@@ -7,7 +7,7 @@ import { Settings } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import ProviderPreferencesModal from "@/components/shared/provider-preferences-modal"
 
-export default function PreferencesPage() {
+export default function BeneficiaryPreferencesPage() {
   const router = useRouter()
   const { isAuthenticated, currentRole } = useAppStore()
   const [showModal, setShowModal] = useState(false)

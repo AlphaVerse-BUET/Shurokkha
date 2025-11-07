@@ -1,12 +1,16 @@
 "use client"
 
-import { useState } from "react"
-import { Plus, Trash2, Sparkles } from "lucide-react"
+import { useState, useMemo } from "react"
+import { Plus, Trash2, Sparkles, Settings } from "lucide-react"
 import { useToast } from "@/hooks/use-toast"
 import FileUploadWithPreview from "@/components/shared/file-upload-with-preview"
 import AIVerificationDisplay from "@/components/shared/ai-verification-display"
+import ProviderPreferencesModal from "@/components/shared/provider-preferences-modal"
+import ProviderSuggestionCard from "@/components/shared/provider-suggestion-card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
+import { mockProviders } from "@/store/mock-data"
+import { suggestProviders } from "@/lib/provider-matching"
 
 type NeedCategory = "shelter" | "food" | "medical" | "education" | "livelihood"
 type UrgencyLevel = "critical" | "emergency" | "high" | "medium"
@@ -76,12 +80,15 @@ export default function BeneficiaryApplicationFormImproved() {
   const [aiChecks, setAiChecks] = useState<any[]>([])
   const [overallConfidence, setOverallConfidence] = useState<number | undefined>(undefined)
   const [aiIssues, setAiIssues] = useState<string[]>([])
+  const [showPreferencesModal, setShowPreferencesModal] = useState(false)
+  const [selectedProviderFromSuggestion, setSelectedProviderFromSuggestion] = useState<string | null>(null)
 
   const [formData, setFormData] = useState({
     fullName: "",
     nidNumber: "",
     phone: "",
     address: "",
+    locationDivision: "Dhaka" as string,
     needCategory: "shelter" as NeedCategory,
     urgencyLevel: "high" as UrgencyLevel,
     needDescription: "",
@@ -95,6 +102,14 @@ export default function BeneficiaryApplicationFormImproved() {
     geographicPreference: "local" as "local" | "national",
     organizationSizePreference: "medium" as any,
     privacyMode: "limited" as "anonymous" | "limited" | "full",
+    providerPreference: {
+      positive: [],
+      negative: [],
+      preferredTypes: [],
+      preferredOrganizationSizes: [],
+      preferredSpecializations: [],
+      minTrustScore: 0,
+    },
   })
 
   const [uploadedFiles, setUploadedFiles] = useState<{
@@ -131,7 +146,8 @@ export default function BeneficiaryApplicationFormImproved() {
     } else if (stepNum === 3) {
       if (!uploadedFiles.nidFront.file) newErrors.nidFront = "NID front photo required"
       if (!uploadedFiles.nidBack.file) newErrors.nidBack = "NID back photo required"
-      if (!uploadedFiles.crisisProof.file) newErrors.crisisProof = "Proof of need required"
+      // Proof of need is now optional for testing
+      // if (!uploadedFiles.crisisProof.file) newErrors.crisisProof = "Proof of need required"
     }
 
     setErrors(newErrors)
@@ -296,12 +312,16 @@ export default function BeneficiaryApplicationFormImproved() {
           title: "Verification Warning",
           description: "Some checks need attention. You can still proceed.",
         })
+        // Auto-move to step 4 after a brief delay for warnings
+        setTimeout(() => setStep(4), 1500)
       } else {
         setAiStatus("verified")
         toast({
           title: "Verification Successful!",
           description: `AI verified your documents with ${avgConfidence}% confidence`,
         })
+        // Auto-move to step 4 after a brief delay
+        setTimeout(() => setStep(4), 1500)
       }
     } catch (error) {
       setAiStatus("failed")
@@ -319,13 +339,19 @@ export default function BeneficiaryApplicationFormImproved() {
   const handleContinue = () => {
     if (validateStep(step)) {
       if (step < 4) {
-        setStep(step + 1)
+        // For step 3, we need to run AI verification first
         if (step === 3 && uploadedFiles.nidFront.file && uploadedFiles.nidBack.file) {
           handleAIVerification()
+        } else {
+          // For other steps, move to next step directly
+          setStep(step + 1)
         }
       }
     }
   }
+
+  // Allow moving to step 4 after AI verification completes
+  const canProceedToStep4 = aiStatus === "verified" || aiStatus === "warning"
 
   const handleSubmit = () => {
     toast({
@@ -445,12 +471,33 @@ export default function BeneficiaryApplicationFormImproved() {
 
           <div>
             <label className="block text-sm font-semibold text-foreground mb-2">
+              Division <span className="text-red-500">*</span>
+            </label>
+            <select
+              value={formData.locationDivision}
+              onChange={(e) => setFormData({ ...formData, locationDivision: e.target.value })}
+              className="w-full px-4 py-2 bg-background border border-border/50 rounded-lg text-foreground focus:outline-none focus:ring-2 focus:ring-accent/50"
+              data-testid="select-division"
+            >
+              <option value="Dhaka">Dhaka</option>
+              <option value="Chittagong">Chittagong</option>
+              <option value="Sylhet">Sylhet</option>
+              <option value="Khulna">Khulna</option>
+              <option value="Rajshahi">Rajshahi</option>
+              <option value="Barisal">Barisal</option>
+              <option value="Rangpur">Rangpur</option>
+              <option value="Mymensingh">Mymensingh</option>
+            </select>
+          </div>
+
+          <div>
+            <label className="block text-sm font-semibold text-foreground mb-2">
               Address <span className="text-red-500">*</span>
             </label>
             <textarea
               value={formData.address}
               onChange={(e) => setFormData({ ...formData, address: e.target.value })}
-              placeholder="Enter your full address (house, village, upazila, district, division)"
+              placeholder="Enter your full address (house, village, upazila, district)"
               rows={3}
               className={`w-full px-4 py-2 bg-background border rounded-lg text-foreground placeholder:text-foreground/40 focus:outline-none focus:ring-2 focus:ring-accent/50 ${
                 errors.address ? "border-red-500/50" : "border-border/50"
@@ -608,7 +655,6 @@ export default function BeneficiaryApplicationFormImproved() {
           <FileUploadWithPreview
             label="NID Front Copy"
             description="Clear photo of your NID front side"
-            required
             accept="image/*"
             onFileSelect={(file, preview) => {
               setUploadedFiles((prev) => ({
@@ -624,7 +670,6 @@ export default function BeneficiaryApplicationFormImproved() {
           <FileUploadWithPreview
             label="NID Back Copy"
             description="Clear photo of your NID back side"
-            required
             accept="image/*"
             onFileSelect={(file, preview) => {
               setUploadedFiles((prev) => ({
@@ -638,9 +683,8 @@ export default function BeneficiaryApplicationFormImproved() {
           />
 
           <FileUploadWithPreview
-            label="Proof of Need"
+            label="Proof of Need (Optional - For Testing)"
             description="Damage photos, medical records, or relevant documentation (images or videos)"
-            required
             accept="image/*,video/*"
             maxSize={10}
             onFileSelect={(file, preview) => {
@@ -701,10 +745,74 @@ export default function BeneficiaryApplicationFormImproved() {
             processingStage={verificationStage}
           />
 
+          {/* Provider Suggestions */}
+          <ProviderSuggestionsSection
+            beneficiary={formData}
+            preferences={formData.providerPreference}
+            selectedProviderId={selectedProviderFromSuggestion}
+            onSelectProvider={(providerId) => setSelectedProviderFromSuggestion(providerId)}
+            onCustomizePreferences={() => setShowPreferencesModal(true)}
+          />
+
+          {/* Provider Preferences */}
+          <div className="bg-card border border-border/50 rounded-lg p-6 space-y-4">
+            <div className="flex items-center justify-between mb-2">
+              <div>
+                <h3 className="text-lg font-bold text-foreground">Provider Preferences</h3>
+                <p className="text-xs text-foreground/60 mt-1">
+                  Customize which providers you'd like to work with
+                </p>
+              </div>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setShowPreferencesModal(true)}
+                className="gap-2"
+              >
+                <Settings className="w-4 h-4" />
+                Customize
+              </Button>
+            </div>
+
+            {/* Preferences Summary */}
+            <div className="space-y-2">
+              {formData.providerPreference?.positive && formData.providerPreference.positive.length > 0 && (
+                <div className="flex items-start gap-2">
+                  <Badge variant="secondary" className="text-xs">
+                    ❤️ {formData.providerPreference.positive.length} Preferred
+                  </Badge>
+                </div>
+              )}
+              {formData.providerPreference?.negative && formData.providerPreference.negative.length > 0 && (
+                <div className="flex items-start gap-2">
+                  <Badge variant="destructive" className="text-xs">
+                    🚫 {formData.providerPreference.negative.length} Excluded
+                  </Badge>
+                </div>
+              )}
+              {formData.providerPreference?.preferredTypes &&
+                formData.providerPreference.preferredTypes.length > 0 && (
+                  <div className="flex items-start gap-2">
+                    <Badge variant="secondary" className="text-xs">
+                      🏢 Types: {formData.providerPreference.preferredTypes.join(", ")}
+                    </Badge>
+                  </div>
+                )}
+              {formData.providerPreference?.minTrustScore &&
+                formData.providerPreference.minTrustScore > 0 && (
+                  <div className="flex items-start gap-2">
+                    <Badge variant="secondary" className="text-xs">
+                      🛡️ Min Trust: {formData.providerPreference.minTrustScore}%
+                    </Badge>
+                  </div>
+                )}
+            </div>
+          </div>
+
           {/* Preferences */}
           <div className="bg-card border border-border/50 rounded-lg p-6 space-y-4">
             <div className="flex items-center justify-between mb-2">
-              <h3 className="text-lg font-bold text-foreground">Preferences & Payment</h3>
+              <h3 className="text-lg font-bold text-foreground">Payment Details</h3>
               <Badge variant="secondary" className="gap-1">
                 <Sparkles className="w-3 h-3" />
                 Step 4 of 4
@@ -786,12 +894,112 @@ export default function BeneficiaryApplicationFormImproved() {
         {step < 4 && (
           <Button
             onClick={handleContinue}
+            disabled={step === 3 && isVerifying}
             className="flex-1"
             data-testid="btn-continue"
           >
-            Continue
+            {step === 3 && isVerifying ? "Verifying..." : "Continue"}
           </Button>
         )}
+        {step === 4 && aiStatus === "verified" && (
+          <Button
+            onClick={() => setStep(3)}
+            variant="outline"
+            className="flex-1"
+            data-testid="btn-back-from-step4"
+          >
+            Back
+          </Button>
+        )}
+      </div>
+
+      {/* Provider Preferences Modal */}
+      <ProviderPreferencesModal
+        isOpen={showPreferencesModal}
+        onClose={() => setShowPreferencesModal(false)}
+        onSave={(preferences) => {
+          setFormData((prev) => ({
+            ...prev,
+            providerPreference: preferences,
+          }))
+        }}
+        initialPreferences={formData.providerPreference}
+        title="Customize Provider Preferences"
+        description="Select which providers you'd like to work with based on your needs and preferences"
+      />
+    </div>
+  )
+}
+
+// Provider Suggestions Section Component
+function ProviderSuggestionsSection({
+  beneficiary,
+  preferences,
+  selectedProviderId,
+  onSelectProvider,
+  onCustomizePreferences,
+}: {
+  beneficiary: any
+  preferences: any
+  selectedProviderId: string | null
+  onSelectProvider: (providerId: string) => void
+  onCustomizePreferences?: () => void
+}) {
+  const suggestions = useMemo(() => {
+    // Create a beneficiary-like object from form data for matching
+    const beneficiaryData = {
+      id: "temp-beneficiary",
+      needCategory: beneficiary.needCategory || "shelter",
+      location: {
+        division: beneficiary.locationDivision || "Dhaka",
+        district: "District",
+        upazila: "Upazila",
+      },
+      urgencyLevel: beneficiary.urgencyLevel || "high",
+    }
+
+    return suggestProviders(beneficiaryData as any, mockProviders, preferences, 3)
+  }, [beneficiary.needCategory, beneficiary.urgencyLevel, beneficiary.locationDivision, preferences])
+
+  if (suggestions.length === 0) {
+    return null
+  }
+
+  return (
+    <div className="bg-card border border-border/50 rounded-lg p-6 space-y-4">
+      <div className="flex items-start justify-between">
+        <div>
+          <h3 className="text-lg font-bold text-foreground flex items-center gap-2">
+            <Sparkles className="w-5 h-5 text-accent" />
+            AI Recommended Providers
+          </h3>
+          <p className="text-sm text-foreground/60 mt-1">
+            Based on your needs and preferences, here are the best providers for you
+          </p>
+        </div>
+        {onCustomizePreferences && (
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={onCustomizePreferences}
+            className="gap-2"
+          >
+            <Settings className="w-4 h-4" />
+            Refine
+          </Button>
+        )}
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        {suggestions.map((suggestion) => (
+          <ProviderSuggestionCard
+            key={suggestion.providerId}
+            suggestion={suggestion}
+            onSelect={onSelectProvider}
+            isSelected={selectedProviderId === suggestion.providerId}
+            showDetails={false}
+          />
+        ))}
       </div>
     </div>
   )

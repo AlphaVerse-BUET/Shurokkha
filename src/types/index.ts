@@ -176,8 +176,15 @@ export interface Beneficiary {
   organizationSizePreference?: "large" | "medium" | "small" | "religious" | "government"
   geographicPreference?: "local" | "national"
   providerPreference?: {
-    positive: string[]
-    negative: string[]
+    // Specific providers
+    positive: string[] // Preferred provider IDs
+    negative: string[] // Excluded provider IDs
+    // Type-based preferences
+    preferredTypes?: ("ngo" | "volunteer")[]
+    preferredOrganizationSizes?: ("large" | "medium" | "small" | "religious" | "government")[]
+    preferredSpecializations?: CrisisType[]
+    // Trust threshold
+    minTrustScore?: number // Only accept providers above this score
   }
 
   // Payment method

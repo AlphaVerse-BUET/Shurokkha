@@ -9,13 +9,15 @@ import { Label } from "@/components/ui/label"
 import { Switch } from "@/components/ui/switch"
 import { Input } from "@/components/ui/input"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Bell, Lock, Globe, Shield, ArrowLeft } from "lucide-react"
+import { Bell, Lock, Globe, Shield, ArrowLeft, DollarSign } from "lucide-react"
 import { useToast } from "@/hooks/use-toast"
+import { useCurrency } from "@/contexts/currency-context"
 
 export default function SettingsPage() {
   const { currentUser, currentRole } = useAppStore()
   const router = useRouter()
   const { toast } = useToast()
+  const { currency, setCurrency } = useCurrency()
   const [loading, setLoading] = useState(false)
 
   // Notification settings
@@ -247,10 +249,10 @@ export default function SettingsPage() {
           <TabsContent value="language">
             <Card>
               <CardHeader>
-                <CardTitle>Language Preferences</CardTitle>
-                <CardDescription>Choose your preferred language</CardDescription>
+                <CardTitle>Language & Currency Preferences</CardTitle>
+                <CardDescription>Choose your preferred language and currency</CardDescription>
               </CardHeader>
-              <CardContent className="space-y-4">
+              <CardContent className="space-y-6">
                 <div className="space-y-2">
                   <Label>Select Language</Label>
                   <div className="grid grid-cols-2 gap-4">
@@ -261,6 +263,46 @@ export default function SettingsPage() {
                       বাংলা (Coming Soon)
                     </Button>
                   </div>
+                </div>
+
+                <div className="space-y-2">
+                  <Label>Select Currency</Label>
+                  <p className="text-sm text-muted-foreground mb-3">
+                    All monetary amounts across the platform will be displayed in your selected currency
+                  </p>
+                  <div className="grid grid-cols-2 gap-4">
+                    <Button
+                      variant={currency === "BDT" ? "default" : "outline"}
+                      className="justify-start"
+                      onClick={() => {
+                        setCurrency("BDT")
+                        toast({
+                          title: "Currency updated",
+                          description: "All amounts will now be displayed in Bangladeshi Taka (৳)",
+                        })
+                      }}
+                    >
+                      <DollarSign className="w-4 h-4 mr-2" />
+                      BDT (৳) - Bangladeshi Taka
+                    </Button>
+                    <Button
+                      variant={currency === "USD" ? "default" : "outline"}
+                      className="justify-start"
+                      onClick={() => {
+                        setCurrency("USD")
+                        toast({
+                          title: "Currency updated",
+                          description: "All amounts will now be displayed in US Dollars ($)",
+                        })
+                      }}
+                    >
+                      <DollarSign className="w-4 h-4 mr-2" />
+                      USD ($) - US Dollar
+                    </Button>
+                  </div>
+                  <p className="text-xs text-muted-foreground mt-2">
+                    Exchange rate: 1 USD = 110 BDT (approximate)
+                  </p>
                 </div>
               </CardContent>
             </Card>
