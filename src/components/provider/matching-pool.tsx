@@ -4,6 +4,7 @@ import { useMemo } from "react"
 import { mockDonations, mockCrises, mockBeneficiaries } from "@/store/mock-data"
 import type { Provider } from "@/types"
 import { ChevronRight, CheckCircle, AlertCircle, Sparkles, User } from "lucide-react"
+import { useCurrency } from "@/contexts/currency-context"
 import { Card } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -17,6 +18,8 @@ interface ProviderMatchingPoolProps {
 }
 
 export default function ProviderMatchingPool({ provider, metrics }: ProviderMatchingPoolProps) {
+  const { formatAbbreviated } = useCurrency()
+  
   const availableBeneficiaries = useMemo(() => {
     return mockBeneficiaries
       .filter((b) => b.applicationStatus === "pending" || b.applicationStatus === "verified" || b.applicationStatus === "submitted")
@@ -78,7 +81,7 @@ export default function ProviderMatchingPool({ provider, metrics }: ProviderMatc
               <Sparkles className="w-4 h-4" />
               Total Available Matching Pool
             </p>
-            <h2 className="text-4xl font-bold text-primary">৳{formatMillions(metrics?.availableMatchingPool)}M</h2>
+            <h2 className="text-4xl font-bold text-primary">{formatAbbreviated(metrics?.availableMatchingPool || 0)}</h2>
           </div>
           <div className="text-right">
             <p className="text-sm text-foreground/70">{availableDonations.length} Donation(s) Available</p>
@@ -159,7 +162,7 @@ export default function ProviderMatchingPool({ provider, metrics }: ProviderMatc
                         {beneficiary.needCategory}
                       </Badge>
                       <Badge variant="secondary" className="text-xs">
-                        ৳{formatAmount(beneficiary.amountRequested)}
+                        {formatAbbreviated(beneficiary.amountRequested)}
                       </Badge>
                     </div>
                   </div>
@@ -244,7 +247,7 @@ export default function ProviderMatchingPool({ provider, metrics }: ProviderMatc
                   {/* Amount */}
                   <div>
                     <p className="text-xs text-foreground/60 mb-1">Donation Amount</p>
-                    <p className="text-lg font-bold text-primary">৳{formatAmount(donation.amount)}</p>
+                    <p className="text-lg font-bold text-primary">{formatAbbreviated(donation.amount)}</p>
                   </div>
 
                   {/* Provider match */}

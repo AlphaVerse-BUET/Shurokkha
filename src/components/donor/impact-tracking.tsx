@@ -5,12 +5,15 @@ import { mockBeneficiaries } from "@/store/mock-data"
 import type { BeneficiaryAllocation } from "@/types"
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from "recharts"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { useCurrency } from "@/contexts/currency-context"
 
 interface DonorImpactTrackingProps {
   allocations: BeneficiaryAllocation[]
 }
 
 export default function DonorImpactTracking({ allocations }: DonorImpactTrackingProps) {
+  const { formatAbbreviated } = useCurrency()
+  
   // Category breakdown
   const categoryBreakdown = useMemo(() => {
     const breakdown: Record<string, number> = {
@@ -63,7 +66,7 @@ export default function DonorImpactTracking({ allocations }: DonorImpactTracking
       {/* Total impact card */}
       <div className="bg-linear-to-br from-primary/10 to-accent/5 border border-primary/30 rounded-lg p-6 text-center">
         <p className="text-foreground/70 text-sm mb-2">Total Impact Created</p>
-        <h2 className="text-4xl font-bold text-primary">৳{(totalImpact / 1000000).toFixed(2)}M</h2>
+        <h2 className="text-4xl font-bold text-primary">{formatAbbreviated(totalImpact)}</h2>
         <p className="text-foreground/60 text-sm mt-2">Distributed across {allocations.length} allocations</p>
       </div>
 
@@ -79,7 +82,7 @@ export default function DonorImpactTracking({ allocations }: DonorImpactTracking
                   cx="50%"
                   cy="50%"
                   labelLine={false}
-                  label={({ name, value }) => `${name}: ৳${(value / 1000000).toFixed(1)}M`}
+                  label={({ name, value }) => `${name}: ${formatAbbreviated(value as number)}`}
                   outerRadius={100}
                   fill="#8884d8"
                   dataKey="value"
@@ -88,7 +91,7 @@ export default function DonorImpactTracking({ allocations }: DonorImpactTracking
                     <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                   ))}
                 </Pie>
-                <Tooltip formatter={(value: any) => `৳${(value / 1000000).toFixed(2)}M`} />
+                <Tooltip formatter={(value: any) => formatAbbreviated(value)} />
               </PieChart>
             </ResponsiveContainer>
           </div>
@@ -105,7 +108,7 @@ export default function DonorImpactTracking({ allocations }: DonorImpactTracking
                 <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border)" />
                 <XAxis dataKey="name" stroke="var(--color-foreground-muted)" />
                 <YAxis stroke="var(--color-foreground-muted)" />
-                <Tooltip formatter={(value: any) => `৳${(value / 1000000).toFixed(2)}M`} />
+                <Tooltip formatter={(value: any) => formatAbbreviated(value)} />
                 <Bar dataKey="value" fill="hsl(var(--color-primary))" radius={[8, 8, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
@@ -132,7 +135,7 @@ export default function DonorImpactTracking({ allocations }: DonorImpactTracking
                   </Avatar>
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-medium text-foreground">
-                      ৳{alloc.allocatedAmount.toLocaleString()} allocated to {beneficiary?.fullName || "Beneficiary"}
+                      {formatAbbreviated(alloc.allocatedAmount)} allocated to {beneficiary?.fullName || "Beneficiary"}
                     </p>
                     <p className="text-xs text-foreground/60 mt-1">
                       {new Date(alloc.createdAt).toLocaleDateString()} - Status: {alloc.status}

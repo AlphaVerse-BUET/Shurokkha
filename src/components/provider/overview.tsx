@@ -3,6 +3,7 @@
 import { Star, TrendingUp, Clock, Users, Award, AlertCircle } from "lucide-react"
 import type { Provider } from "@/types"
 import Link from "next/link"
+import { useCurrency } from "@/contexts/currency-context"
 
 interface ProviderOverviewProps {
   provider: Provider
@@ -18,6 +19,7 @@ interface ProviderOverviewProps {
 }
 
 export default function ProviderOverview({ provider, metrics }: ProviderOverviewProps) {
+  const { formatAbbreviated } = useCurrency()
   return (
     <div className="space-y-6">
       {/* Trust Score Card */}
@@ -61,7 +63,7 @@ export default function ProviderOverview({ provider, metrics }: ProviderOverview
             <TrendingUp className="w-4 h-4 text-primary" />
           </div>
           <div className="text-3xl font-bold text-foreground">
-            ৳{(metrics.availableMatchingPool / 1000000).toFixed(2)}M
+            {formatAbbreviated(metrics.availableMatchingPool)}
           </div>
           <p className="text-xs text-foreground/60 mt-2">Donor funds ready to allocate</p>
         </div>
@@ -80,7 +82,7 @@ export default function ProviderOverview({ provider, metrics }: ProviderOverview
             <span className="text-xs font-semibold text-foreground/60 uppercase">Monthly Capacity</span>
             <AlertCircle className="w-4 h-4 text-orange-600" />
           </div>
-          <div className="text-3xl font-bold text-foreground">৳{(provider.monthlyFundCap / 1000000).toFixed(1)}M</div>
+          <div className="text-3xl font-bold text-foreground">{formatAbbreviated(provider.monthlyFundCap)}</div>
           <p className="text-xs text-foreground/60 mt-2">Current month allocation</p>
         </div>
 

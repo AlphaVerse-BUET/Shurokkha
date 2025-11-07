@@ -67,7 +67,7 @@ export default function ImpactMapPage() {
                   fill
                   className="object-cover"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent flex items-end">
+                <div className="absolute inset-0 bg-linear-to-t from-black/40 to-transparent flex items-end">
                   <div className="p-4 text-white text-sm">
                     Green = High Impact | Yellow = Medium Impact | Red = Active Crises
                   </div>

@@ -3,13 +3,15 @@
 import React, { createContext, useContext, useState, useEffect } from "react"
 
 type Currency = "BDT" | "USD"
+type FormatType = "full" | "abbreviated"
 
 interface CurrencyContextType {
   currency: Currency
   setCurrency: (currency: Currency) => void
-  formatAmount: (amount: number) => string
+  formatAmount: (amount: number, formatType?: FormatType) => string
   convertAmount: (amount: number) => number
   getCurrencySymbol: () => string
+  formatAbbreviated: (amount: number) => string
 }
 
 const CurrencyContext = createContext<CurrencyContextType | undefined>(undefined)
@@ -42,8 +44,47 @@ export function CurrencyProvider({ children }: { children: React.ReactNode }) {
     return bdtAmount
   }
 
-  // Format amount with currency symbol
-  const formatAmount = (bdtAmount: number): string => {
+  // Format amount with abbreviated notation (K, Lakh, M)
+  const formatAbbreviated = (bdtAmount: number): string => {
+    const converted = convertAmount(bdtAmount)
+    const symbol = getCurrencySymbol()
+
+    if (currency === "BDT") {
+      // BDT: K (1000), Lakh (100,000), Crore (10,000,000)
+      if (converted >= 10000000) {
+        return `${symbol}${(converted / 10000000).toFixed(2)}Cr`
+      }
+      if (converted >= 100000) {
+        return `${symbol}${(converted / 100000).toFixed(2)}L`
+      }
+      if (converted >= 1000) {
+        return `${symbol}${(converted / 1000).toFixed(1)}K`
+      }
+      return `${symbol}${converted.toLocaleString()}`
+    } else {
+      // USD: K, M, B
+      if (converted >= 1000000000) {
+        return `${symbol}${(converted / 1000000000).toFixed(2)}B`
+      }
+      if (converted >= 1000000) {
+        return `${symbol}${(converted / 1000000).toFixed(2)}M`
+      }
+      if (converted >= 1000) {
+        return `${symbol}${(converted / 1000).toFixed(1)}K`
+      }
+      return `${symbol}${converted.toLocaleString(undefined, {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      })}`
+    }
+  }
+
+  // Format amount with currency symbol (full format)
+  const formatAmount = (bdtAmount: number, formatType: FormatType = "full"): string => {
+    if (formatType === "abbreviated") {
+      return formatAbbreviated(bdtAmount)
+    }
+
     const converted = convertAmount(bdtAmount)
     const formatted = converted.toLocaleString(undefined, {
       minimumFractionDigits: currency === "USD" ? 2 : 0,
@@ -62,7 +103,7 @@ export function CurrencyProvider({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <CurrencyContext.Provider value={{ currency, setCurrency, formatAmount, convertAmount, getCurrencySymbol }}>
+    <CurrencyContext.Provider value={{ currency, setCurrency, formatAmount, convertAmount, getCurrencySymbol, formatAbbreviated }}>
       {children}
     </CurrencyContext.Provider>
   )

@@ -3,6 +3,7 @@
 import { useMemo } from "react"
 import { mockDonations } from "@/store/mock-data"
 import { Trophy, Star, Zap, Users, Award } from "lucide-react"
+import { useCurrency } from "@/contexts/currency-context"
 
 interface DonorGamificationProps {
   donorId: string
@@ -18,6 +19,8 @@ const calculateImpactScore = (
 }
 
 export default function DonorGamification({ donorId }: DonorGamificationProps) {
+  const { formatAbbreviated } = useCurrency()
+
   const donorData = useMemo(() => {
     const donations = mockDonations.filter((d) => d.donorId === donorId)
     const totalDonated = donations.reduce((sum, d) => sum + d.amount, 0)
@@ -64,8 +67,8 @@ export default function DonorGamification({ donorId }: DonorGamificationProps) {
   const badges = useMemo(() => {
     const allBadges = []
 
-    if (donorData.totalDonated >= 100000) allBadges.push({ id: "100k-donated", name: "৳100K+ Donated", icon: Trophy })
-    if (donorData.totalDonated >= 10000) allBadges.push({ id: "10k-donated", name: "৳10K+ Donated", icon: Star })
+    if (donorData.totalDonated >= 100000) allBadges.push({ id: "100k-donated", name: "100K+ Donated", icon: Trophy })
+    if (donorData.totalDonated >= 10000) allBadges.push({ id: "10k-donated", name: "10K+ Donated", icon: Star })
     if (donorData.allocationsCompleted >= 10)
       allBadges.push({ id: "10-families", name: "10 Families Fed", icon: Users })
     if (donorData.allocationsCompleted >= 1)
@@ -104,7 +107,7 @@ export default function DonorGamification({ donorId }: DonorGamificationProps) {
               />
             </div>
             <p className="text-xs opacity-90 mt-2">
-              ৳{(donorData.nextLevelThreshold - donorData.totalDonated).toLocaleString()} more to next level
+              {formatAbbreviated(donorData.nextLevelThreshold - donorData.totalDonated)} more to next level
             </p>
           </div>
         )}
@@ -120,7 +123,7 @@ export default function DonorGamification({ donorId }: DonorGamificationProps) {
 
         <div className="bg-card border border-border/50 rounded-lg p-4 text-center">
           <p className="text-xs text-foreground/60 mb-1">Total Donated</p>
-          <p className="text-3xl font-bold text-accent">৳{(donorData.totalDonated / 1000000).toFixed(2)}M</p>
+          <p className="text-3xl font-bold text-accent">{formatAbbreviated(donorData.totalDonated)}</p>
           <p className="text-xs text-foreground/60 mt-2">Across all crises</p>
         </div>
 
@@ -171,7 +174,7 @@ export default function DonorGamification({ donorId }: DonorGamificationProps) {
                 </div>
               </div>
               <div className="text-right">
-                <p className="text-sm font-bold text-accent">৳{((100 - rank * 10) * 100000).toLocaleString()}</p>
+                <p className="text-sm font-bold text-accent">{formatAbbreviated((100 - rank * 10) * 100000)}</p>
               </div>
             </div>
           ))}

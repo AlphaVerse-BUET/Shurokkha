@@ -4,6 +4,7 @@ import { useState } from "react"
 import { mockBeneficiaries, mockProviders, mockDistributionProofs } from "@/store/mock-data"
 import { CheckCircle, Clock, MapPin, User, Package } from "lucide-react"
 import { useBeneficiaryStatus } from "@/hooks/use-beneficiary-status"
+import { useCurrency } from "@/contexts/currency-context"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
@@ -13,6 +14,7 @@ import { ApplicationTimeline } from "@/components/beneficiary/application-timeli
 export default function BeneficiaryStatusTracking() {
   const beneficiary = mockBeneficiaries[0]
   const status = useBeneficiaryStatus(beneficiary)
+  const { formatAbbreviated } = useCurrency()
   const { statusLabel, statusColor, progress, verificationBadge, nextAction } = status
   
   const [showDistributionProof, setShowDistributionProof] = useState(false)
@@ -62,7 +64,7 @@ export default function BeneficiaryStatusTracking() {
           <div className="grid grid-cols-2 gap-4">
             <div>
               <p className="text-xs text-foreground/60 mb-1">Amount Allocated</p>
-              <p className="text-2xl font-bold text-primary">৳{beneficiary.amountRequested.toLocaleString()}</p>
+              <p className="text-2xl font-bold text-primary">{formatAbbreviated(beneficiary.amountRequested)}</p>
             </div>
             <div>
               <p className="text-xs text-foreground/60 mb-1">Provider</p>
@@ -97,7 +99,7 @@ export default function BeneficiaryStatusTracking() {
                 {[...Array(5)].map((_, i) => (
                   <div
                     key={i}
-                    className={`w-5 h-5 rounded ${i < beneficiary.providerRating ? "bg-yellow-400" : "bg-border/30"}`}
+                    className={`w-5 h-5 rounded ${i < (beneficiary.providerRating ?? 0) ? "bg-yellow-400" : "bg-border/30"}`}
                   />
                 ))}
               </div>

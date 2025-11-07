@@ -3,6 +3,7 @@
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { useAppStore } from "@/store/app-store"
+import { useCurrency } from "@/contexts/currency-context"
 import { mockBeneficiaries, mockProviders } from "@/store/mock-data"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -29,6 +30,7 @@ import type { Beneficiary, NeedCategory } from "@/types"
 export default function ProviderBeneficiariesPage() {
   const router = useRouter()
   const { currentUser } = useAppStore()
+  const { formatAbbreviated } = useCurrency()
   const provider = mockProviders.find((p) => p.email === currentUser?.email) || mockProviders[0]
 
   const [searchQuery, setSearchQuery] = useState("")
@@ -143,7 +145,7 @@ export default function ProviderBeneficiariesPage() {
                 <TrendingUp className="h-8 w-8 text-purple-500" />
                 <div>
                   <p className="text-2xl font-bold">
-                    ৳{(compatibleBeneficiaries.reduce((sum, b) => sum + b.amountRequested, 0) / 1000).toFixed(0)}K
+                    {formatAbbreviated(compatibleBeneficiaries.reduce((sum, b) => sum + b.amountRequested, 0))}
                   </p>
                   <p className="text-xs text-muted-foreground">Total Need</p>
                 </div>
@@ -328,7 +330,7 @@ export default function ProviderBeneficiariesPage() {
 
                     <div className="text-right">
                       <p className="text-3xl font-bold text-primary">
-                        ৳{beneficiary.amountRequested.toLocaleString()}
+                        {formatAbbreviated(beneficiary.amountRequested)}
                       </p>
                       <p className="text-xs text-muted-foreground mb-3">Requested Amount</p>
                       <Button size="sm" className="gap-2" data-testid={`btn-view-${beneficiary.id}`}>
@@ -418,13 +420,13 @@ export default function ProviderBeneficiariesPage() {
                   {selectedBeneficiary.itemizedBreakdown.map((item, idx) => (
                     <div key={idx} className="flex justify-between p-3 bg-muted rounded-lg">
                       <span className="text-sm">{item.item}</span>
-                      <span className="font-semibold">৳{item.cost.toLocaleString()}</span>
+                      <span className="font-semibold">{formatAbbreviated(item.cost)}</span>
                     </div>
                   ))}
                   <div className="flex justify-between p-3 bg-primary/10 rounded-lg border-2 border-primary/30">
                     <span className="font-bold">Total</span>
                     <span className="font-bold text-primary text-lg">
-                      ৳{selectedBeneficiary.amountRequested.toLocaleString()}
+                      {formatAbbreviated(selectedBeneficiary.amountRequested)}
                     </span>
                   </div>
                 </div>
@@ -456,7 +458,7 @@ export default function ProviderBeneficiariesPage() {
                       <img 
                         src={selectedBeneficiary.nidFrontImage} 
                         alt="NID Front" 
-                        className="w-full aspect-[3/2] object-cover rounded border"
+                        className="w-full aspect-3/2 object-cover rounded border"
                         onError={(e) => {
                           e.currentTarget.src = "/placeholder.svg"
                         }}
@@ -469,7 +471,7 @@ export default function ProviderBeneficiariesPage() {
                       <img 
                         src={selectedBeneficiary.nidBackImage} 
                         alt="NID Back" 
-                        className="w-full aspect-[3/2] object-cover rounded border"
+                        className="w-full aspect-3/2 object-cover rounded border"
                         onError={(e) => {
                           e.currentTarget.src = "/placeholder.svg"
                         }}
@@ -482,7 +484,7 @@ export default function ProviderBeneficiariesPage() {
                       <img 
                         src={img} 
                         alt={`Crisis Proof ${idx + 1}`} 
-                        className="w-full aspect-[3/2] object-cover rounded border"
+                        className="w-full aspect-3/2 object-cover rounded border"
                         onError={(e) => {
                           e.currentTarget.src = "/placeholder.svg"
                         }}

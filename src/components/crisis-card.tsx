@@ -2,6 +2,7 @@
 
 import type { Crisis } from "@/types"
 import { TrendingUp, ThumbsUp } from "lucide-react"
+import { useCurrency } from "@/contexts/currency-context"
 
 interface CrisisCardProps {
   crisis: Crisis
@@ -12,6 +13,7 @@ interface CrisisCardProps {
 export default function CrisisCard({ crisis, onView, onDonate }: CrisisCardProps) {
   const fundingPercentage = (crisis.fundingReceived / crisis.fundingNeeded) * 100
   const isTrending = crisis.trending
+  const { formatAbbreviated } = useCurrency()
 
   const getSeverityColor = (severity: number) => {
     if (severity >= 80) return "bg-red-500/20 text-red-700 border-red-500/50"
@@ -84,8 +86,8 @@ export default function CrisisCard({ crisis, onView, onDonate }: CrisisCardProps
             />
           </div>
           <div className="flex justify-between items-center mt-1">
-            <span className="text-xs text-foreground/60">৳{(crisis.fundingReceived / 1000000).toFixed(1)}M raised</span>
-            <span className="text-xs text-foreground/60">of ৳{(crisis.fundingNeeded / 1000000).toFixed(1)}M</span>
+            <span className="text-xs text-foreground/60">{formatAbbreviated(crisis.fundingReceived)} raised</span>
+            <span className="text-xs text-foreground/60">of {formatAbbreviated(crisis.fundingNeeded)}</span>
           </div>
         </div>
 

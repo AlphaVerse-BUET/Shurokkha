@@ -2,6 +2,7 @@
 
 import { Wallet, TrendingUp, ArrowUpRight, ArrowDownLeft } from "lucide-react"
 import Link from "next/link"
+import { useCurrency } from "@/contexts/currency-context"
 
 interface FinancialMetrics {
   totalDonated: number
@@ -23,6 +24,8 @@ interface DonorFinancialDashboardProps {
 }
 
 export default function DonorFinancialDashboard({ metrics, impactSummary }: DonorFinancialDashboardProps) {
+  const { formatAbbreviated } = useCurrency()
+
   return (
     <div className="space-y-6">
       {/* Wallet Overview Cards */}
@@ -33,7 +36,7 @@ export default function DonorFinancialDashboard({ metrics, impactSummary }: Dono
             <span className="text-xs font-semibold text-foreground/60 uppercase">Total Donated</span>
             <Wallet className="w-4 h-4 text-primary" />
           </div>
-          <div className="text-3xl font-bold text-foreground">৳{(metrics.totalDonated / 1000000).toFixed(2)}M</div>
+          <div className="text-3xl font-bold text-foreground">{formatAbbreviated(metrics.totalDonated)}</div>
           <p className="text-xs text-foreground/60 mt-2">Across all crises</p>
         </div>
 
@@ -43,7 +46,7 @@ export default function DonorFinancialDashboard({ metrics, impactSummary }: Dono
             <span className="text-xs font-semibold text-foreground/60 uppercase">Allocated</span>
             <ArrowDownLeft className="w-4 h-4 text-accent" />
           </div>
-          <div className="text-3xl font-bold text-foreground">৳{(metrics.allocated / 1000000).toFixed(2)}M</div>
+          <div className="text-3xl font-bold text-foreground">{formatAbbreviated(metrics.allocated)}</div>
           <p className="text-xs text-foreground/60 mt-2">In active distributions</p>
         </div>
 
@@ -53,7 +56,7 @@ export default function DonorFinancialDashboard({ metrics, impactSummary }: Dono
             <span className="text-xs font-semibold text-foreground/60 uppercase">Available</span>
             <ArrowUpRight className="w-4 h-4 text-green-600" />
           </div>
-          <div className="text-3xl font-bold text-foreground">৳{(metrics.available / 1000).toFixed(0)}K</div>
+          <div className="text-3xl font-bold text-foreground">{formatAbbreviated(metrics.available)}</div>
           <p className="text-xs text-foreground/60 mt-2">Ready to allocate or withdraw</p>
         </div>
 
@@ -63,7 +66,7 @@ export default function DonorFinancialDashboard({ metrics, impactSummary }: Dono
             <span className="text-xs font-semibold text-foreground/60 uppercase">Fees Paid</span>
             <TrendingUp className="w-4 h-4 text-orange-600" />
           </div>
-          <div className="text-3xl font-bold text-foreground">৳{(metrics.fees / 1000).toFixed(0)}K</div>
+          <div className="text-3xl font-bold text-foreground">{formatAbbreviated(metrics.fees)}</div>
           <p className="text-xs text-foreground/60 mt-2">2.5% platform fee</p>
         </div>
       </div>

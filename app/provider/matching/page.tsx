@@ -4,6 +4,7 @@ import { useAppStore } from "@/store/app-store"
 import { useRouter } from "next/navigation"
 import { useEffect } from "react"
 import { mockProviders, mockDonations, mockCrises } from "@/store/mock-data"
+import { useCurrency } from "@/contexts/currency-context"
 import { Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -12,6 +13,7 @@ import { CheckCircle, AlertCircle, MapPin, DollarSign } from "lucide-react"
 export default function MatchingPage() {
   const router = useRouter()
   const { isAuthenticated, currentRole, currentUser } = useAppStore()
+  const { formatAbbreviated } = useCurrency()
 
   useEffect(() => {
     if (!isAuthenticated || currentRole !== "provider") {
@@ -54,7 +56,7 @@ export default function MatchingPage() {
               <DollarSign className="w-4 h-4" />
               Total Available
             </div>
-            <div className="text-3xl font-bold text-primary">৳{(totalAvailable / 1000000).toFixed(2)}M</div>
+            <div className="text-3xl font-bold text-primary">{formatAbbreviated(totalAvailable)}</div>
             <div className="text-xs text-muted-foreground mt-2">{availableDonations.length} donations</div>
           </Card>
 
@@ -120,7 +122,7 @@ export default function MatchingPage() {
                       </div>
                     </div>
                     <div className="text-right">
-                      <div className="text-3xl font-bold text-primary">৳{donation.amount.toLocaleString()}</div>
+                      <div className="text-3xl font-bold text-primary">{formatAbbreviated(donation.amount)}</div>
                       <div className="text-xs text-muted-foreground mt-1">
                         {donation.allocations.length} beneficiaries
                       </div>

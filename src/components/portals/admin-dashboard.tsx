@@ -2,6 +2,7 @@
 
 import { useState, useMemo } from "react"
 import { useAppStore } from "@/store/app-store"
+import { useCurrency } from "@/contexts/currency-context"
 import AdminFinancialCenter from "@/components/admin/financial-center"
 import AdminFraudDetection from "@/components/admin/fraud-detection"
 import AdminCrisisManagement from "@/components/admin/crisis-management"
@@ -15,6 +16,7 @@ import { useRouter } from "next/navigation"
 
 export default function AdminDashboard() {
   const { currentUser } = useAppStore()
+  const { formatAbbreviated } = useCurrency()
   const [activeTab, setActiveTab] = useState<"financial" | "fraud" | "crises" | "providers">("financial")
   const router = useRouter()
 
@@ -76,11 +78,11 @@ export default function AdminDashboard() {
           {/* Quick metrics */}
           <div className="grid grid-cols-2 md:grid-cols-5 gap-3 mb-4">
             <div className="bg-card border border-border/50 rounded-lg p-3 text-center">
-              <div className="text-2xl font-bold text-primary">৳{(metrics.totalDonated / 1000000).toFixed(1)}M</div>
+              <div className="text-2xl font-bold text-primary">{formatAbbreviated(metrics.totalDonated)}</div>
               <p className="text-xs text-foreground/60 mt-1">Total Donations</p>
             </div>
             <div className="bg-card border border-border/50 rounded-lg p-3 text-center">
-              <div className="text-2xl font-bold text-accent">৳{(metrics.totalFees / 100000).toFixed(1)}L</div>
+              <div className="text-2xl font-bold text-accent">{formatAbbreviated(metrics.totalFees)}</div>
               <p className="text-xs text-foreground/60 mt-1">Platform Fees</p>
             </div>
             <div className="bg-card border border-border/50 rounded-lg p-3 text-center">

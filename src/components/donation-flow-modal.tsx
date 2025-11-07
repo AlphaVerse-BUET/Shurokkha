@@ -3,6 +3,7 @@
 import { useState } from "react"
 import { mockCrises, mockProviders } from "@/store/mock-data"
 import { X, ChevronRight } from "lucide-react"
+import { useCurrency } from "@/contexts/currency-context"
 
 interface DonationFlowModalProps {
   crisisId: string
@@ -12,6 +13,7 @@ interface DonationFlowModalProps {
 
 export default function DonationFlowModal({ crisisId, onClose, onComplete }: DonationFlowModalProps) {
   const crisis = mockCrises.find((c) => c.id === crisisId)
+  const { formatAbbreviated } = useCurrency()
   const [step, setStep] = useState(1)
   const [donationAmount, setDonationAmount] = useState("")
   const [message, setMessage] = useState("")
@@ -72,7 +74,7 @@ export default function DonationFlowModal({ crisisId, onClose, onComplete }: Don
           {step === 1 && (
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-semibold text-foreground mb-2">Donation Amount (৳)</label>
+                <label className="block text-sm font-semibold text-foreground mb-2">Donation Amount</label>
                 <input
                   type="number"
                   value={donationAmount}
@@ -94,7 +96,7 @@ export default function DonationFlowModal({ crisisId, onClose, onComplete }: Don
                         : "bg-card border border-border/50 hover:border-primary/50 text-foreground"
                     }`}
                   >
-                    ৳{(amount / 1000).toFixed(0)}K
+                    {formatAbbreviated(amount)}
                   </button>
                 ))}
               </div>
@@ -116,15 +118,15 @@ export default function DonationFlowModal({ crisisId, onClose, onComplete }: Don
                 <div className="bg-primary/5 border border-primary/30 rounded-lg p-3 text-sm">
                   <div className="flex justify-between mb-1">
                     <span className="text-foreground/70">Donation:</span>
-                    <span className="font-medium">৳{Number(donationAmount).toLocaleString()}</span>
+                    <span className="font-medium">{formatAbbreviated(Number(donationAmount))}</span>
                   </div>
                   <div className="flex justify-between text-foreground/60">
                     <span>Platform fee (2.5%):</span>
-                    <span>৳{(Number(donationAmount) * 0.025).toFixed(0)}</span>
+                    <span>{formatAbbreviated(Number(donationAmount) * 0.025)}</span>
                   </div>
                   <div className="border-t border-primary/30 mt-2 pt-2 flex justify-between font-semibold">
                     <span>Total charge:</span>
-                    <span className="text-primary">৳{(Number(donationAmount) * 1.025).toFixed(0)}</span>
+                    <span className="text-primary">{formatAbbreviated(Number(donationAmount) * 1.025)}</span>
                   </div>
                 </div>
               )}
@@ -202,15 +204,15 @@ export default function DonationFlowModal({ crisisId, onClose, onComplete }: Don
                 </div>
                 <div className="flex justify-between">
                   <span className="text-foreground/70">Amount:</span>
-                  <span className="font-medium text-primary">৳{Number(donationAmount).toLocaleString()}</span>
+                  <span className="font-medium text-primary">{formatAbbreviated(Number(donationAmount))}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-foreground/70">Fee (2.5%):</span>
-                  <span className="font-medium text-foreground">৳{(Number(donationAmount) * 0.025).toFixed(0)}</span>
+                  <span className="font-medium text-foreground">{formatAbbreviated(Number(donationAmount) * 0.025)}</span>
                 </div>
                 <div className="border-t border-border/30 pt-3 flex justify-between">
                   <span className="font-semibold text-foreground">Total Charge:</span>
-                  <span className="font-bold text-lg text-primary">৳{(Number(donationAmount) * 1.025).toFixed(0)}</span>
+                  <span className="font-bold text-lg text-primary">{formatAbbreviated(Number(donationAmount) * 1.025)}</span>
                 </div>
               </div>
 

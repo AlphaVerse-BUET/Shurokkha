@@ -1,6 +1,7 @@
 "use client"
 
 import { useAppStore } from "@/store/app-store"
+import { useCurrency } from "@/contexts/currency-context"
 import { mockDonations } from "@/store/mock-data"
 import { Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -11,6 +12,7 @@ import { Download, FileText } from "lucide-react"
 export default function ReceiptPage() {
   const router = useRouter()
   const { isAuthenticated, currentRole } = useAppStore()
+  const { formatAbbreviated } = useCurrency()
 
   useEffect(() => {
     if (!isAuthenticated || currentRole !== "donor") {
@@ -59,7 +61,7 @@ export default function ReceiptPage() {
                     </div>
                     <div>
                       <span className="text-muted-foreground">Amount:</span>
-                      <div className="font-medium">৳{donation.amount.toLocaleString()}</div>
+                      <div className="font-medium">{formatAbbreviated(donation.amount)}</div>
                     </div>
                     <div>
                       <span className="text-muted-foreground">Date:</span>

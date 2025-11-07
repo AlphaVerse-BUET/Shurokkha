@@ -3,6 +3,7 @@
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { useAppStore } from "@/store/app-store"
+import { useCurrency } from "@/contexts/currency-context"
 import { mockCrises, mockProviders } from "@/store/mock-data"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
@@ -19,6 +20,7 @@ import { AlertCircle } from "lucide-react"
 export default function NewDonationPage() {
   const router = useRouter()
   const { isAuthenticated, currentRole } = useAppStore()
+  const { formatAbbreviated } = useCurrency()
   const { toast } = useToast()
   const [step, setStep] = useState<1 | 2 | 3>(1)
   const [selectedCrisis, setSelectedCrisis] = useState<string | null>(null)
@@ -142,7 +144,7 @@ export default function NewDonationPage() {
                   <p className="text-sm text-muted-foreground mb-3">{c.location.district}</p>
                   <div className="flex justify-between items-end text-xs">
                     <span className="text-foreground/60">
-                      Gap: ৳{(c.fundingNeeded - c.fundingReceived).toLocaleString()}
+                      Gap: {formatAbbreviated(c.fundingNeeded - c.fundingReceived)}
                     </span>
                     <span className="font-semibold text-primary">
                       {Math.round((c.fundingReceived / c.fundingNeeded) * 100)}% funded
@@ -180,7 +182,7 @@ export default function NewDonationPage() {
                     max="10000000"
                   />
                 </div>
-                <p className="text-xs text-muted-foreground mt-1">Minimum: ৳100 | Maximum: ৳10,000,000</p>
+                <p className="text-xs text-muted-foreground mt-1">Minimum: 100 | Maximum: 10,000,000</p>
               </div>
 
               {impactPrediction && (
@@ -190,7 +192,7 @@ export default function NewDonationPage() {
                   <div className="grid grid-cols-2 gap-2 text-xs">
                     <div>
                       <span className="text-muted-foreground">Avg Cost/Family: </span>
-                      <span className="font-semibold">৳{impactPrediction.predictedCost.toLocaleString()}</span>
+                      <span className="font-semibold">{formatAbbreviated(impactPrediction.predictedCost)}</span>
                     </div>
                     <div>
                       <span className="text-muted-foreground">Est. Days: </span>
@@ -288,7 +290,7 @@ export default function NewDonationPage() {
                     <span className="ml-2">Processing...</span>
                   </>
                 ) : (
-                  `Complete Donation ৳${amount}`
+                  `Complete Donation ${amount ? formatAbbreviated(Number(amount)) : ''}`
                 )}
               </Button>
             </div>
@@ -299,7 +301,7 @@ export default function NewDonationPage() {
       {showConfirmation && (
         <ConfirmationDialog
           title="Confirm Donation"
-          message={`Are you sure you want to donate ৳${Number(amount).toLocaleString()} to ${crisis?.title}? This action cannot be undone.`}
+          message={`Are you sure you want to donate ${amount ? formatAbbreviated(Number(amount)) : ''} to ${crisis?.title}? This action cannot be undone.`}
           confirmLabel="Confirm Donation"
           cancelLabel="Cancel"
           onConfirm={handleDonate}

@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation"
 import { useAppStore } from "@/store/app-store"
+import { useCurrency } from "@/contexts/currency-context"
 import { Card } from "@/components/ui/card"
 import { mockDonations, mockCrises, mockProviders, mockBeneficiaries } from "@/store/mock-data"
 import {
@@ -47,6 +48,7 @@ const providerPerformance = [
 export default function AnalyticsPage() {
   const router = useRouter()
   const { isAuthenticated, currentRole } = useAppStore()
+  const { formatAbbreviated } = useCurrency()
 
   if (!isAuthenticated || currentRole !== "admin") {
     return (
@@ -85,7 +87,7 @@ export default function AnalyticsPage() {
               <DollarSign className="w-4 h-4" />
               Total Donations
             </div>
-            <div className="text-3xl font-bold text-primary">৳{(totalDonated / 1000000).toFixed(1)}M</div>
+            <div className="text-3xl font-bold text-primary">{formatAbbreviated(totalDonated)}</div>
             <div className="text-xs text-green-600 mt-2 flex items-center gap-1">
               <TrendingUp className="w-3 h-3" />
               +35% from last month
@@ -201,11 +203,11 @@ export default function AnalyticsPage() {
             <div className="space-y-2 text-sm">
               <div className="flex justify-between">
                 <span className="text-muted-foreground">Average per day:</span>
-                <span className="font-medium">৳{(totalDonated / 180 / 100000).toFixed(1)}L</span>
+                <span className="font-medium">{formatAbbreviated(totalDonated / 180)}</span>
               </div>
               <div className="flex justify-between">
                 <span className="text-muted-foreground">Peak day:</span>
-                <span className="font-medium">৳2.5L</span>
+                <span className="font-medium">{formatAbbreviated(250000)}</span>
               </div>
               <div className="flex justify-between">
                 <span className="text-muted-foreground">Growth rate:</span>
@@ -245,7 +247,7 @@ export default function AnalyticsPage() {
               </div>
               <div className="flex justify-between">
                 <span className="text-muted-foreground">Avg donation:</span>
-                <span className="font-medium">৳{(totalDonated / 650 / 1000).toFixed(0)}K</span>
+                <span className="font-medium">{formatAbbreviated(totalDonated / 650)}</span>
               </div>
             </div>
           </Card>
