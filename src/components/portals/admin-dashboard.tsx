@@ -87,7 +87,7 @@ export default function AdminDashboard() {
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
                   <DropdownMenuItem
-                    onClick={() => router.push("/admin/create-crisis")}
+                    onClick={() => router.push("/crises?addCrisis=true")}
                   >
                     Add Crisis
                   </DropdownMenuItem>

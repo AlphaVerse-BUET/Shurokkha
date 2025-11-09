@@ -23,70 +23,90 @@ export default function Home() {
 
   return (
     <main className="min-h-screen bg-linear-to-br from-background via-background to-primary/5 w-full">
-      {/* Hero Section */}
-      <section className="w-full max-w-7xl mx-auto px-4 py-16 md:py-20">
-        <div className="text-center space-y-4 md:space-y-6 mb-12 md:mb-16">
-          <Badge variant="secondary" className="inline-flex mb-2 md:mb-4">
-            <Sparkles className="w-3 h-3 mr-1" />
-            AI-Powered Transparent Donation Platform
-          </Badge>
-          <h1 className="text-4xl md:text-6xl font-bold text-foreground leading-tight">
-            Donate with Confidence.
-            <br />
-            <span className="text-primary">Track with Precision.</span>
-            <br />
-            Impact with Certainty.
-          </h1>
-          <p className="text-base md:text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-            Shurokkha uses triple-layer AI verification to connect donors with
-            verified providers, ensuring every taka reaches genuine
-            crisis-affected people in Bangladesh with complete transparency.
-          </p>
+      {/* Hero Section with Background Image */}
+      <section className="w-full relative">
+        {/* Background Image with Overlay */}
+        <div className="absolute inset-0 z-0">
+          <div 
+            className="w-full h-full bg-cover bg-center bg-no-repeat"
+            style={{
+              backgroundImage: 'url(/flood-hero.jpg)',
+              filter: 'brightness(0.65)'
+            }}
+          />
+          <div className="absolute inset-0 bg-linear-to-b from-background/60 via-background/50 to-background" />
         </div>
+
+        {/* Content */}
+        <div className="relative z-10 max-w-7xl mx-auto px-4 py-20 md:py-32">
+          <div className="text-center space-y-4 md:space-y-6 mb-12 md:mb-16">
+            <Badge variant="secondary" className="inline-flex mb-2 md:mb-4 bg-primary/90 text-primary-foreground border-primary">
+              <Sparkles className="w-3 h-3 mr-1 shrink-0" />
+              AI-Powered Transparent Donation Platform
+            </Badge>
+            <h1 className="text-4xl md:text-6xl font-bold text-white leading-tight" style={{
+              textShadow: '2px 2px 4px rgba(0,0,0,0.8), -1px -1px 2px rgba(0,0,0,0.5), 1px 1px 8px rgba(0,0,0,0.6)'
+            }}>
+              Donate with Confidence.
+              <br />
+              <span className="text-primary" style={{
+                textShadow: '2px 2px 4px rgba(0,0,0,0.9), -1px -1px 2px rgba(0,0,0,0.6), 1px 1px 8px rgba(0,0,0,0.7)'
+              }}>Track with Precision.</span>
+              <br />
+              Impact with Certainty.
+            </h1>
+            <p className="text-base md:text-xl text-white/90 max-w-3xl mx-auto leading-relaxed" style={{
+              textShadow: '1px 1px 3px rgba(0,0,0,0.8), -1px -1px 2px rgba(0,0,0,0.5), 0px 0px 6px rgba(0,0,0,0.6)'
+            }}>
+              Shurokkha uses triple-layer AI verification to connect donors with
+              verified providers, ensuring every taka reaches genuine
+              crisis-affected people in Bangladesh with complete transparency.
+            </p>
+          </div>
 
         {/* CTA Buttons - Different for logged-in vs logged-out users */}
         {!isAuthenticated ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-6 mb-12 md:mb-20">
             <Link href="/auth/login?role=donor" className="group">
-              <Card className="p-4 md:p-6 hover:shadow-xl hover:scale-105 transition-all cursor-pointer border-2 hover:border-primary h-full">
-                <div className="text-3xl md:text-4xl mb-3">💰</div>
-                <h3 className="font-bold text-lg md:text-xl mb-2 group-hover:text-primary transition">
+              <Card className="p-4 md:p-6 hover:shadow-xl hover:scale-105 transition-all cursor-pointer border-2 hover:border-primary h-full bg-background/95 backdrop-blur">
+                <div className="text-3xl md:text-4xl mb-3 flex justify-center">💰</div>
+                <h3 className="font-bold text-lg md:text-xl mb-2 group-hover:text-primary transition text-center">
                   Donate Now
                 </h3>
-                <p className="text-xs md:text-sm text-muted-foreground">
+                <p className="text-xs md:text-sm text-muted-foreground text-center">
                   Make transparent impact on crises with AI tracking
                 </p>
               </Card>
             </Link>
             <Link href="/auth/login?role=provider" className="group">
-              <Card className="p-4 md:p-6 hover:shadow-xl hover:scale-105 transition-all cursor-pointer border-2 hover:border-primary h-full">
-                <div className="text-3xl md:text-4xl mb-3">🏢</div>
-                <h3 className="font-bold text-lg md:text-xl mb-2 group-hover:text-primary transition">
+              <Card className="p-4 md:p-6 hover:shadow-xl hover:scale-105 transition-all cursor-pointer border-2 hover:border-primary h-full bg-background/95 backdrop-blur">
+                <div className="text-3xl md:text-4xl mb-3 flex justify-center">🏢</div>
+                <h3 className="font-bold text-lg md:text-xl mb-2 group-hover:text-primary transition text-center">
                   Join as Provider
                 </h3>
-                <p className="text-xs md:text-sm text-muted-foreground">
+                <p className="text-xs md:text-sm text-muted-foreground text-center">
                   Distribute verified aid with complete accountability
                 </p>
               </Card>
             </Link>
             <Link href="/auth/login?role=beneficiary" className="group">
-              <Card className="p-4 md:p-6 hover:shadow-xl hover:scale-105 transition-all cursor-pointer border-2 hover:border-primary h-full">
-                <div className="text-3xl md:text-4xl mb-3">🙏</div>
-                <h3 className="font-bold text-lg md:text-xl mb-2 group-hover:text-primary transition">
+              <Card className="p-4 md:p-6 hover:shadow-xl hover:scale-105 transition-all cursor-pointer border-2 hover:border-primary h-full bg-background/95 backdrop-blur">
+                <div className="text-3xl md:text-4xl mb-3 flex justify-center">🙏</div>
+                <h3 className="font-bold text-lg md:text-xl mb-2 group-hover:text-primary transition text-center">
                   Apply for Aid
                 </h3>
-                <p className="text-xs md:text-sm text-muted-foreground">
+                <p className="text-xs md:text-sm text-muted-foreground text-center">
                   Apply for crisis relief with dignity and privacy
                 </p>
               </Card>
             </Link>
             <Link href="/crises" className="group">
-              <Card className="p-4 md:p-6 hover:shadow-xl hover:scale-105 transition-all cursor-pointer border-2 hover:border-primary h-full">
-                <div className="text-3xl md:text-4xl mb-3">🆘</div>
-                <h3 className="font-bold text-lg md:text-xl mb-2 group-hover:text-primary transition">
+              <Card className="p-4 md:p-6 hover:shadow-xl hover:scale-105 transition-all cursor-pointer border-2 hover:border-primary h-full bg-background/95 backdrop-blur">
+                <div className="text-3xl md:text-4xl mb-3 flex justify-center">🆘</div>
+                <h3 className="font-bold text-lg md:text-xl mb-2 group-hover:text-primary transition text-center">
                   View Crises
                 </h3>
-                <p className="text-xs md:text-sm text-muted-foreground">
+                <p className="text-xs md:text-sm text-muted-foreground text-center">
                   See active crises detected by AI
                 </p>
               </Card>
@@ -96,8 +116,8 @@ export default function Home() {
           // Logged-in users see quick action buttons
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 mb-12 md:mb-20 max-w-4xl mx-auto">
             <Link href="/dashboard" className="group">
-              <Card className="p-6 hover:shadow-xl hover:scale-105 transition-all cursor-pointer border-2 hover:border-primary h-full text-center">
-                <div className="text-4xl mb-3">📊</div>
+              <Card className="p-6 hover:shadow-xl hover:scale-105 transition-all cursor-pointer border-2 hover:border-primary h-full text-center bg-background/95 backdrop-blur">
+                <div className="text-4xl mb-3 flex justify-center">📊</div>
                 <h3 className="font-bold text-xl mb-2 group-hover:text-primary transition">
                   My Dashboard
                 </h3>
@@ -107,8 +127,8 @@ export default function Home() {
               </Card>
             </Link>
             <Link href="/crises" className="group">
-              <Card className="p-6 hover:shadow-xl hover:scale-105 transition-all cursor-pointer border-2 hover:border-primary h-full text-center">
-                <div className="text-4xl mb-3">🆘</div>
+              <Card className="p-6 hover:shadow-xl hover:scale-105 transition-all cursor-pointer border-2 hover:border-primary h-full text-center bg-background/95 backdrop-blur">
+                <div className="text-4xl mb-3 flex justify-center">🆘</div>
                 <h3 className="font-bold text-xl mb-2 group-hover:text-primary transition">
                   Active Crises
                 </h3>
@@ -118,8 +138,8 @@ export default function Home() {
               </Card>
             </Link>
             <Link href="/impact-map" className="group">
-              <Card className="p-6 hover:shadow-xl hover:scale-105 transition-all cursor-pointer border-2 hover:border-primary h-full text-center">
-                <div className="text-4xl mb-3">🗺️</div>
+              <Card className="p-6 hover:shadow-xl hover:scale-105 transition-all cursor-pointer border-2 hover:border-primary h-full text-center bg-background/95 backdrop-blur">
+                <div className="text-4xl mb-3 flex justify-center">🗺️</div>
                 <h3 className="font-bold text-xl mb-2 group-hover:text-primary transition">
                   Impact Map
                 </h3>
@@ -130,35 +150,45 @@ export default function Home() {
             </Link>
           </div>
         )}
+        </div>
+      </section>
 
+      {/* Key Features Section - Outside hero */}
+      <section className="w-full max-w-7xl mx-auto px-4 py-12 md:py-20">
         {/* Key Features */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-8 mb-12 md:mb-20">
           <Card className="p-6 md:p-8 bg-linear-to-br from-green-50 to-green-100 dark:from-green-950 dark:to-green-900 border-green-200">
-            <Shield className="w-8 md:w-12 h-8 md:h-12 text-green-600 mb-3 md:mb-4" />
-            <h3 className="font-bold text-lg md:text-2xl mb-2 md:mb-3">
+            <div className="flex justify-center mb-3 md:mb-4">
+              <Shield className="w-8 md:w-12 h-8 md:h-12 text-green-600" />
+            </div>
+            <h3 className="font-bold text-lg md:text-2xl mb-2 md:mb-3 text-center">
               100% Transparency
             </h3>
-            <p className="text-xs md:text-base text-muted-foreground leading-relaxed">
+            <p className="text-xs md:text-base text-muted-foreground leading-relaxed text-center">
               Track every taka from donation to distribution with AI
               verification, GPS tracking, and photo proof at every step.
             </p>
           </Card>
           <Card className="p-6 md:p-8 bg-linear-to-br from-blue-50 to-blue-100 dark:from-blue-950 dark:to-blue-900 border-blue-200">
-            <Sparkles className="w-8 md:w-12 h-8 md:h-12 text-blue-600 mb-3 md:mb-4" />
-            <h3 className="font-bold text-lg md:text-2xl mb-2 md:mb-3">
+            <div className="flex justify-center mb-3 md:mb-4">
+              <Sparkles className="w-8 md:w-12 h-8 md:h-12 text-blue-600" />
+            </div>
+            <h3 className="font-bold text-lg md:text-2xl mb-2 md:mb-3 text-center">
               &lt;1% Fraud Rate
             </h3>
-            <p className="text-xs md:text-base text-muted-foreground leading-relaxed">
+            <p className="text-xs md:text-base text-muted-foreground leading-relaxed text-center">
               Triple-layer AI verification eliminates fake claims through
               document verification, face matching, and fraud pattern detection.
             </p>
           </Card>
           <Card className="p-6 md:p-8 bg-linear-to-br from-purple-50 to-purple-100 dark:from-purple-950 dark:to-purple-900 border-purple-200">
-            <Zap className="w-8 md:w-12 h-8 md:h-12 text-purple-600 mb-3 md:mb-4" />
-            <h3 className="font-bold text-lg md:text-2xl mb-2 md:mb-3">
+            <div className="flex justify-center mb-3 md:mb-4">
+              <Zap className="w-8 md:w-12 h-8 md:h-12 text-purple-600" />
+            </div>
+            <h3 className="font-bold text-lg md:text-2xl mb-2 md:mb-3 text-center">
               5-Day Delivery
             </h3>
-            <p className="text-xs md:text-base text-muted-foreground leading-relaxed">
+            <p className="text-xs md:text-base text-muted-foreground leading-relaxed text-center">
               Crisis detection to aid delivery in 5-7 days average versus 45
               days traditional charity distribution.
             </p>
@@ -169,7 +199,9 @@ export default function Home() {
         <Card className="p-6 md:p-12 bg-linear-to-r from-primary/10 via-secondary/10 to-accent/10 border-primary/20 mb-12 md:mb-20">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 text-center">
             <div>
-              <TrendingUp className="w-6 md:w-8 h-6 md:h-8 mx-auto mb-2 md:mb-3 text-primary" />
+              <div className="flex justify-center mb-2 md:mb-3">
+                <TrendingUp className="w-6 md:w-8 h-6 md:h-8 text-primary" />
+              </div>
               <div className="text-2xl md:text-4xl font-bold text-primary mb-1 md:mb-2">
                 {formatAbbreviated(500000000)}
               </div>
@@ -178,7 +210,9 @@ export default function Home() {
               </div>
             </div>
             <div>
-              <Users className="w-6 md:w-8 h-6 md:h-8 mx-auto mb-2 md:mb-3 text-secondary" />
+              <div className="flex justify-center mb-2 md:mb-3">
+                <Users className="w-6 md:w-8 h-6 md:h-8 text-secondary" />
+              </div>
               <div className="text-2xl md:text-4xl font-bold text-secondary mb-1 md:mb-2">
                 50,000+
               </div>
@@ -187,7 +221,9 @@ export default function Home() {
               </div>
             </div>
             <div>
-              <Globe className="w-6 md:w-8 h-6 md:h-8 mx-auto mb-2 md:mb-3 text-accent" />
+              <div className="flex justify-center mb-2 md:mb-3">
+                <Globe className="w-6 md:w-8 h-6 md:h-8 text-accent" />
+              </div>
               <div className="text-2xl md:text-4xl font-bold text-accent mb-1 md:mb-2">
                 64/64
               </div>

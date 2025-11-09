@@ -36,15 +36,16 @@ export default function AdminAddBeneficiaryPage() {
   }
 
   return (
-    <div className="container max-w-4xl py-8">
-      <div className="flex items-center gap-4 mb-6">
+    <div className="container max-w-4xl mx-auto py-8">
+      <div className="flex items-center justify-center gap-4 mb-6">
         <Button variant="ghost" size="icon" onClick={() => router.back()}>
           <ArrowLeft className="h-5 w-5" />
         </Button>
-        <div>
+        <div className="text-center flex-1">
           <h1 className="text-3xl font-bold">Add New Beneficiary</h1>
           <p className="text-muted-foreground">Manually register a new beneficiary</p>
         </div>
+        <div className="w-10"></div>
       </div>
 
       <div className="space-y-6">

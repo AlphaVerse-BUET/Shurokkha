@@ -19,6 +19,7 @@ import {
   Sparkles,
   User,
   Upload,
+  Plus,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -75,8 +76,16 @@ export default function ProviderDashboard() {
             </div>
             <div className="flex gap-2">
               <Button
-                onClick={() => router.push("/provider/bulk-upload")}
+                onClick={() => router.push("/crises?addCrisis=true")}
                 variant="default"
+                className="gap-2"
+              >
+                <Plus className="w-4 h-4" />
+                Add Crisis
+              </Button>
+              <Button
+                onClick={() => router.push("/provider/bulk-upload")}
+                variant="outline"
                 className="gap-2"
               >
                 <Upload className="w-4 h-4" />

@@ -1,7 +1,7 @@
 "use client"
 
 import type { Crisis } from "@/types"
-import { TrendingUp, ThumbsUp } from "lucide-react"
+import { TrendingUp, ThumbsUp, ThumbsDown, Bot, Shield, Building2 } from "lucide-react"
 import { useCurrency } from "@/contexts/currency-context"
 
 interface CrisisCardProps {
@@ -26,6 +26,18 @@ export default function CrisisCard({ crisis, onView, onDonate }: CrisisCardProps
     if (status === "ai-verified") return "bg-green-500/20 text-green-700"
     if (status === "community-validated") return "bg-blue-500/20 text-blue-700"
     return "bg-yellow-500/20 text-yellow-700"
+  }
+
+  const getUploaderIcon = (type: string) => {
+    if (type === "system") return <Bot className="w-3 h-3" />
+    if (type === "admin") return <Shield className="w-3 h-3" />
+    return <Building2 className="w-3 h-3" />
+  }
+
+  const getUploaderColor = (type: string) => {
+    if (type === "system") return "text-purple-600"
+    if (type === "admin") return "text-red-600"
+    return "text-blue-600"
   }
 
   return (
@@ -63,6 +75,18 @@ export default function CrisisCard({ crisis, onView, onDonate }: CrisisCardProps
 
       {/* Content */}
       <div className="p-4 space-y-3">
+        {/* Uploader info */}
+        <div className="flex items-center gap-2 text-xs">
+          <span className={`flex items-center gap-1 font-medium ${getUploaderColor(crisis.uploadedBy.type)}`}>
+            {getUploaderIcon(crisis.uploadedBy.type)}
+            {crisis.uploadedBy.name}
+          </span>
+          <span className="text-foreground/40">•</span>
+          <span className="text-foreground/60">
+            {new Date(crisis.createdAt).toLocaleDateString()}
+          </span>
+        </div>
+
         {/* Title */}
         <div>
           <h3 className="font-bold text-foreground text-sm leading-tight line-clamp-2 group-hover:text-primary transition-colors">
@@ -92,17 +116,24 @@ export default function CrisisCard({ crisis, onView, onDonate }: CrisisCardProps
         </div>
 
         {/* Impact metrics */}
-        <div className="grid grid-cols-2 gap-2 pt-2 border-t border-border/30">
+        <div className="grid grid-cols-3 gap-2 pt-2 border-t border-border/30">
           <div className="text-center">
             <div className="text-sm font-bold text-foreground">{crisis.affectedPopulation.toLocaleString()}</div>
             <div className="text-xs text-foreground/60">Affected</div>
           </div>
           <div className="text-center">
-            <div className="text-sm font-bold text-foreground flex items-center justify-center gap-1">
-              <ThumbsUp className="w-3 h-3 text-green-600" />
+            <div className="text-sm font-bold text-green-600 flex items-center justify-center gap-1">
+              <ThumbsUp className="w-3 h-3" />
               {crisis.upvotes}
             </div>
-            <div className="text-xs text-foreground/60">Community</div>
+            <div className="text-xs text-foreground/60">Upvotes</div>
+          </div>
+          <div className="text-center">
+            <div className="text-sm font-bold text-red-600 flex items-center justify-center gap-1">
+              <ThumbsDown className="w-3 h-3" />
+              {crisis.downvotes}
+            </div>
+            <div className="text-xs text-foreground/60">Downvotes</div>
           </div>
         </div>
 
