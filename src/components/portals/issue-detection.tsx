@@ -1,12 +1,15 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { mockCrises } from "@/store/mock-data";
 import { useAppStore } from "@/store/app-store";
 import CrisisCard from "@/components/crisis-card";
 import CrisisDetailModal from "@/components/crisis-detail-modal";
 import DonationFlowModal from "@/components/donation-flow-modal";
-import { Filter, AlertCircle, MapPin } from "lucide-react";
+import CreateCrisisModal from "@/components/create-crisis-modal";
+import { Filter, AlertCircle, MapPin, Plus } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 type FilterType = "type" | "severity" | "location";
 type CrisisTypeFilter =
@@ -38,7 +41,9 @@ const DIVISIONS = [
 ];
 
 export default function CrisisIssueDetection() {
-  const { login } = useAppStore();
+  const { login, isAuthenticated, currentRole } = useAppStore();
+  const router = useRouter();
+  const searchParams = useSearchParams();
 
   // Filters state
   const [selectedTypes, setSelectedTypes] = useState<CrisisTypeFilter[]>([
@@ -54,6 +59,19 @@ export default function CrisisIssueDetection() {
   const [selectedCrisis, setSelectedCrisis] = useState<string | null>(null);
   const [showDonationModal, setShowDonationModal] = useState(false);
   const [donationCrisisId, setDonationCrisisId] = useState<string | null>(null);
+  const [showCreateCrisisModal, setShowCreateCrisisModal] = useState(false);
+
+  // Check URL params for modal trigger
+  useEffect(() => {
+    const addCrisis = searchParams.get("addCrisis");
+    if (addCrisis === "true" && (currentRole === "admin" || currentRole === "provider")) {
+      setShowCreateCrisisModal(true);
+      // Clean up URL without reloading
+      const url = new URL(window.location.href);
+      url.searchParams.delete("addCrisis");
+      window.history.replaceState({}, "", url.toString());
+    }
+  }, [searchParams, currentRole]);
 
   // Filter crises
   const filteredCrises = useMemo(() => {
@@ -173,11 +191,22 @@ export default function CrisisIssueDetection() {
                 validated
               </p>
             </div>
-            <div className="flex flex-col sm:text-right">
-              <div className="text-2xl font-bold text-primary">
-                ৳{(fundingStats.gap / 1000000).toFixed(1)}M
+            <div className="flex items-center gap-3">
+              <div className="flex flex-col sm:text-right">
+                <div className="text-2xl font-bold text-primary">
+                  ৳{(fundingStats.gap / 1000000).toFixed(1)}M
+                </div>
+                <div className="text-xs text-foreground/60">Funding Gap</div>
               </div>
-              <div className="text-xs text-foreground/60">Funding Gap</div>
+              {isAuthenticated && (currentRole === "admin" || currentRole === "provider") && (
+                <Button
+                  onClick={() => setShowCreateCrisisModal(true)}
+                  className="gap-2"
+                >
+                  <Plus className="w-4 h-4" />
+                  Add Crisis
+                </Button>
+              )}
             </div>
           </div>
 
@@ -387,6 +416,12 @@ export default function CrisisIssueDetection() {
           onComplete={handleDonationStart}
         />
       )}
+
+      {/* Create crisis modal */}
+      <CreateCrisisModal
+        open={showCreateCrisisModal}
+        onClose={() => setShowCreateCrisisModal(false)}
+      />
     </div>
   );
 }

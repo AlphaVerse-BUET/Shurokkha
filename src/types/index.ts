@@ -43,6 +43,11 @@ export interface Crisis {
   trending: boolean
   upvotes: number
   downvotes: number
+  uploadedBy: {
+    type: "system" | "admin" | "provider"
+    name: string
+    id?: string
+  }
 }
 
 // Donations

@@ -97,7 +97,11 @@ export const mockCrises: Crisis[] = [
     status: "active",
     verified: true,
     verificationStatus: "ai-verified",
-    evidenceImages: ["/placeholder-sbne4.png"],
+    evidenceImages: [
+      "/placeholder-sbne4.png",
+      "/cyclone-damage-homes.jpg",
+      "/medical-facility.jpg"
+    ],
     newsLinks: ["https://example.com/news/sylhet-flood"],
     satelliteData: "NASA satellite confirms 15% area inundation",
     createdAt: "2024-06-01",
@@ -105,6 +109,10 @@ export const mockCrises: Crisis[] = [
     trending: true,
     upvotes: 456,
     downvotes: 12,
+    uploadedBy: {
+      type: "system",
+      name: "AI Detection System"
+    }
   },
   {
     id: "crisis-2",
@@ -124,13 +132,21 @@ export const mockCrises: Crisis[] = [
     status: "active",
     verified: true,
     verificationStatus: "community-validated",
-    evidenceImages: ["/cyclone-damage-homes.jpg"],
+    evidenceImages: [
+      "/cyclone-damage-homes.jpg",
+      "/placeholder-sbne4.png"
+    ],
     newsLinks: ["https://example.com/news/satkhira-cyclone"],
     createdAt: "2024-05-20",
     updatedAt: "2024-06-10",
     trending: true,
     upvotes: 234,
     downvotes: 8,
+    uploadedBy: {
+      type: "admin",
+      name: "Admin User",
+      id: "admin-1"
+    }
   },
   {
     id: "crisis-3",
@@ -157,6 +173,11 @@ export const mockCrises: Crisis[] = [
     trending: false,
     upvotes: 189,
     downvotes: 3,
+    uploadedBy: {
+      type: "provider",
+      name: "BRAC Healthcare",
+      id: "provider-1"
+    }
   },
   {
     id: "crisis-4",
@@ -183,6 +204,11 @@ export const mockCrises: Crisis[] = [
     trending: false,
     upvotes: 167,
     downvotes: 5,
+    uploadedBy: {
+      type: "provider",
+      name: "Jaago Foundation",
+      id: "provider-2"
+    }
   },
   {
     id: "crisis-5",
@@ -210,6 +236,10 @@ export const mockCrises: Crisis[] = [
     trending: true,
     upvotes: 298,
     downvotes: 6,
+    uploadedBy: {
+      type: "system",
+      name: "AI Detection System"
+    }
   },
   {
     id: "crisis-6",
@@ -237,6 +267,10 @@ export const mockCrises: Crisis[] = [
     trending: true,
     upvotes: 567,
     downvotes: 15,
+    uploadedBy: {
+      type: "system",
+      name: "AI Detection System"
+    }
   },
   {
     id: "crisis-7",
@@ -263,6 +297,11 @@ export const mockCrises: Crisis[] = [
     trending: false,
     upvotes: 123,
     downvotes: 4,
+    uploadedBy: {
+      type: "admin",
+      name: "District Admin",
+      id: "admin-2"
+    }
   },
   {
     id: "crisis-8",
@@ -290,6 +329,11 @@ export const mockCrises: Crisis[] = [
     trending: false,
     upvotes: 89,
     downvotes: 2,
+    uploadedBy: {
+      type: "provider",
+      name: "Krishi Foundation",
+      id: "provider-3"
+    }
   },
   {
     id: "crisis-9",
@@ -316,6 +360,11 @@ export const mockCrises: Crisis[] = [
     trending: false,
     upvotes: 67,
     downvotes: 1,
+    uploadedBy: {
+      type: "admin",
+      name: "Regional Coordinator",
+      id: "admin-3"
+    }
   },
   {
     id: "crisis-10",
@@ -342,6 +391,11 @@ export const mockCrises: Crisis[] = [
     trending: true,
     upvotes: 45,
     downvotes: 3,
+    uploadedBy: {
+      type: "provider",
+      name: "Médecins Sans Frontières",
+      id: "provider-4"
+    }
   },
 ]
 

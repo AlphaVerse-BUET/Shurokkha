@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import { mockCrises } from "@/store/mock-data"
-import { X, ThumbsUp, ThumbsDown, MapPin, Users, TrendingUp, Calendar, Zap } from "lucide-react"
+import { X, ThumbsUp, ThumbsDown, MapPin, Users, TrendingUp, Calendar, Zap, Bot, Shield, Building2 } from "lucide-react"
 
 interface CrisisDetailModalProps {
   crisisId: string
@@ -20,6 +20,101 @@ export default function CrisisDetailModal({ crisisId, onClose, onDonate }: Crisi
 
   const fundingPercentage = (crisis.fundingReceived / crisis.fundingNeeded) * 100
 
+  const getUploaderIcon = (type: string) => {
+    if (type === "system") return <Bot className="w-4 h-4" />
+    if (type === "admin") return <Shield className="w-4 h-4" />
+    return <Building2 className="w-4 h-4" />
+  }
+
+  const getUploaderColor = (type: string) => {
+    if (type === "system") return "bg-purple-500/20 text-purple-700 border-purple-500/50"
+    if (type === "admin") return "bg-red-500/20 text-red-700 border-red-500/50"
+    return "bg-blue-500/20 text-blue-700 border-blue-500/50"
+  }
+
+  // Facebook-style image grid layout
+  const renderImageGrid = () => {
+    const images = crisis.evidenceImages
+    if (images.length === 0) return null
+
+    if (images.length === 1) {
+      return (
+        <div className="relative aspect-video rounded-lg overflow-hidden">
+          <img 
+            src={images[0]} 
+            alt="Crisis evidence"
+            className="w-full h-full object-cover"
+          />
+        </div>
+      )
+    }
+
+    if (images.length === 2) {
+      return (
+        <div className="grid grid-cols-2 gap-1 rounded-lg overflow-hidden">
+          {images.map((img, idx) => (
+            <div key={idx} className="relative aspect-square">
+              <img 
+                src={img} 
+                alt={`Evidence ${idx + 1}`}
+                className="w-full h-full object-cover cursor-pointer hover:opacity-90 transition-opacity"
+                onClick={() => setCurrentImageIndex(idx)}
+              />
+            </div>
+          ))}
+        </div>
+      )
+    }
+
+    if (images.length === 3) {
+      return (
+        <div className="grid grid-cols-2 gap-1 rounded-lg overflow-hidden">
+          <div className="relative aspect-square row-span-2">
+            <img 
+              src={images[0]} 
+              alt="Evidence 1"
+              className="w-full h-full object-cover cursor-pointer hover:opacity-90 transition-opacity"
+              onClick={() => setCurrentImageIndex(0)}
+            />
+          </div>
+          <div className="grid grid-rows-2 gap-1">
+            {images.slice(1).map((img, idx) => (
+              <div key={idx + 1} className="relative aspect-square">
+                <img 
+                  src={img} 
+                  alt={`Evidence ${idx + 2}`}
+                  className="w-full h-full object-cover cursor-pointer hover:opacity-90 transition-opacity"
+                  onClick={() => setCurrentImageIndex(idx + 1)}
+                />
+              </div>
+            ))}
+          </div>
+        </div>
+      )
+    }
+
+    // 4 or more images
+    return (
+      <div className="grid grid-cols-2 gap-1 rounded-lg overflow-hidden">
+        {images.slice(0, 4).map((img, idx) => (
+          <div key={idx} className="relative aspect-square">
+            <img 
+              src={img} 
+              alt={`Evidence ${idx + 1}`}
+              className="w-full h-full object-cover cursor-pointer hover:opacity-90 transition-opacity"
+              onClick={() => setCurrentImageIndex(idx)}
+            />
+            {idx === 3 && images.length > 4 && (
+              <div className="absolute inset-0 bg-black/60 flex items-center justify-center">
+                <span className="text-white text-2xl font-bold">+{images.length - 4}</span>
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
+    )
+  }
+
   return (
     <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
       <div className="bg-background rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto">
@@ -32,27 +127,23 @@ export default function CrisisDetailModal({ crisisId, onClose, onDonate }: Crisi
         </div>
 
         <div className="p-6 space-y-6">
-          {/* Image carousel */}
+          {/* Uploader info */}
+          <div className={`flex items-center gap-3 p-3 rounded-lg border ${getUploaderColor(crisis.uploadedBy.type)}`}>
+            <div className="flex items-center gap-2">
+              {getUploaderIcon(crisis.uploadedBy.type)}
+              <div>
+                <div className="font-semibold text-sm">{crisis.uploadedBy.name}</div>
+                <div className="text-xs opacity-80">
+                  Reported on {new Date(crisis.createdAt).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Image grid - Facebook style */}
           {crisis.evidenceImages.length > 0 && (
             <div className="space-y-2">
-              <img
-                src={crisis.evidenceImages[currentImageIndex] || "/placeholder.svg?height=300&width=500&query=crisis"}
-                alt={`Evidence ${currentImageIndex + 1}`}
-                className="w-full h-64 object-cover rounded-lg border border-border/50"
-              />
-              {crisis.evidenceImages.length > 1 && (
-                <div className="flex justify-center gap-2">
-                  {crisis.evidenceImages.map((_, idx) => (
-                    <button
-                      key={idx}
-                      onClick={() => setCurrentImageIndex(idx)}
-                      className={`w-2 h-2 rounded-full transition-colors ${
-                        idx === currentImageIndex ? "bg-primary" : "bg-border/50"
-                      }`}
-                    />
-                  ))}
-                </div>
-              )}
+              {renderImageGrid()}
             </div>
           )}
 

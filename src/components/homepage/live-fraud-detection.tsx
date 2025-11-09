@@ -141,9 +141,11 @@ export function LiveFraudDetectionShowcase() {
       {/* Stats Bar */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <Card>
-          <CardContent className="p-4 space-y-2">
+          <CardContent className="p-6 space-y-3">
             <div className="flex items-center justify-between">
-              <Zap className="w-4 h-4 text-orange-600" />
+              <div className="w-10 h-10 rounded-full bg-orange-100 dark:bg-orange-900/30 flex items-center justify-center">
+                <Zap className="w-6 h-6 text-orange-600" />
+              </div>
               <span className="text-xs text-muted-foreground">This Month</span>
             </div>
             <div className="text-2xl font-bold">৳{(totalPrevented / 100000).toFixed(1)}L</div>
@@ -152,9 +154,11 @@ export function LiveFraudDetectionShowcase() {
         </Card>
 
         <Card>
-          <CardContent className="p-4 space-y-2">
+          <CardContent className="p-6 space-y-3">
             <div className="flex items-center justify-between">
-              <AlertTriangle className="w-4 h-4 text-red-600" />
+              <div className="w-10 h-10 rounded-full bg-red-100 dark:bg-red-900/30 flex items-center justify-center">
+                <AlertTriangle className="w-6 h-6 text-red-600" />
+              </div>
               <span className="text-xs text-muted-foreground">Detected</span>
             </div>
             <div className="text-2xl font-bold">847</div>
@@ -163,9 +167,11 @@ export function LiveFraudDetectionShowcase() {
         </Card>
 
         <Card>
-          <CardContent className="p-4 space-y-2">
+          <CardContent className="p-6 space-y-3">
             <div className="flex items-center justify-between">
-              <CheckCircle className="w-4 h-4 text-green-600" />
+              <div className="w-10 h-10 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center">
+                <CheckCircle className="w-6 h-6 text-green-600" />
+              </div>
               <span className="text-xs text-muted-foreground">Success Rate</span>
             </div>
             <div className="text-2xl font-bold">99.8%</div>
@@ -174,9 +180,11 @@ export function LiveFraudDetectionShowcase() {
         </Card>
 
         <Card>
-          <CardContent className="p-4 space-y-2">
+          <CardContent className="p-6 space-y-3">
             <div className="flex items-center justify-between">
-              <Clock className="w-4 h-4 text-blue-600" />
+              <div className="w-10 h-10 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center">
+                <Clock className="w-6 h-6 text-blue-600" />
+              </div>
               <span className="text-xs text-muted-foreground">Response Time</span>
             </div>
             <div className="text-2xl font-bold">0.3s</div>
